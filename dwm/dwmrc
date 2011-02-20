@@ -1,0 +1,92 @@
+#!/bin/sh
+
+dwmwifi(){
+	STATUS="X`/sbin/iwgetid`"
+	if test "$STATUS" != "X" ; then
+		ESSID="`/sbin/iwgetid |awk -F ":" '{print $2}'|sed -e 's/"//g'`"
+		LINK="`awk '/wlan0:/ {print $3}' /proc/net/wireless |sed -e 's/\.//g'`"
+		echo " $ESSID:$LINK"
+	fi
+} 
+
+dwmbatt(){
+	FULL=`cat /sys/class/power_supply/BAT0/charge_full`
+	PRESENT=`cat /sys/class/power_supply/BAT0/present`
+	CHARGE=`cat /sys/class/power_supply/BAT0/charge_now`
+	STATUS=`cat /sys/class/power_supply/BAT0/status`
+	if test "$PRESENT" != "0" ; then
+		CHARGE=$((${CHARGE}*100/${FULL}))
+		case $STATUS in
+		Full)
+			SIGN="=";;
+		Charging)
+			SIGN="+";;
+		Discharging)
+			SIGN="-";;
+		esac
+		echo " ${CHARGE}${SIGN}"
+	else
+		echo " AC"
+	fi
+}
+
+dwmvolume(){
+	STATUS="`amixer get Headphone |awk '/Front\ Left:/ {print $4}'`"
+	if test "$STATUS" != "[on]" ; then 
+		echo " Mute"
+	else
+		echo " `/usr/bin/amixer get PCM |awk '/Front\ Left:/ {print $5}' | sed -e 's/\[//g'|sed -e 's/%\]//g'`v"
+	fi
+}
+
+dwmcmusstats(){
+	if test "X`pgrep cmus`" != "X" ; then 
+		TIME="`cmus-remote -Q |awk '/duration/ {print $2}'`"
+		CURR="`cmus-remote -Q |awk '/position/ {print $2}'`"
+		ARTIST="`cmus-remote -Q |sed -ne '/artist/s/tag artist //pg'`"
+		TITLE="`cmus-remote -Q |sed -ne '/title/s/tag title //pg'`"
+        echo "$TITLE ($ARTIST) $CURR/$TIME"
+    fi
+}
+
+dwmnet2(){
+	dn=0
+	dp=0
+	un=0
+	up=0
+	while true;	do
+		un=$(/sbin/ifconfig eth0 | grep 'RX bytes' | cut -d : -f3 | cut -d ' ' -f1)
+		speed_u=$(echo "($un - $up) / 5120" | bc)
+		up=$un
+
+		dn=$(/sbin/ifconfig eth0 | grep 'RX bytes' | cut -d : -f2 | cut -d ' ' -f1)
+		speed_d=$(echo "($dn - $dp) / 5120" | bc)
+		dp=$dn
+		echo "DL/UL: $speed_d/$speed_u Kb/Sec"
+		sleep 5
+	done
+}
+
+dwmnet(){
+  /sbin/ifconfig eth0 | grep 'RX bytes' | awk '-F[: ]+' '{printf("RX %d TX %d",$4/1024,$9/1024)}'
+}
+
+dwmmem(){
+  free -mo | grep Mem: | awk '{printf("RAM %d",$3*100/$2)}'
+}
+
+dwmcpu(){
+  ps -e h o pcpu | awk '{CPU+=$1}END{printf("CPU %d",CPU)}'
+}
+
+dwmdate(){
+  echo `date '+%a %F %H:%M'`
+}
+
+dwmstat(){
+  while true; do
+    xsetroot -name "`dwmcpu` `dwmmem` `dwmnet` | `dwmdate`"
+    sleep 2 
+  done &
+}
+
