@@ -1,0 +1,399 @@
+%%----------------------------------------------------------------------
+%% LaTeX Zeal package
+%%
+%% Copyright: (C) 2009-2011 VietNQ
+%% License:   BSD License
+%%
+%% Updated:
+%% @ 2009/11/17
+%%   Split from class document to new package: zeal.The package
+%%   contains common environments, commands which can be used in both
+%%   article and slide.
+%% @ 2009/08/17
+%%   Using option bookmarksnumbered for hyperref package.
+%% @ 2009/07/01
+%%   Change option code, ltable to nocode, noltable. Code and table are
+%%   now enabled by default.
+%% @ 2009/06/19
+%%   Add StyleCaption, table column type: C, L, R.
+%% @ 2009/06/08
+%%   Add noindent, compress; rowstyle; ltable.
+%%   PdfTitle, Author, Subject; default textwidth for figure.
+%% @ 2009/05/28
+%%   Add notoday, nohead(table); codestyle, codeinput, section[S].
+%%   Using parameter H to prevent table and figure from floating
+%% @ 2009/05/22
+%%   Add code, counter; include section number in table and figure caption
+%% @ 2009/05/13
+%%   Make the template as a class. Add a bundle of options, commands
+%%   and environments table, figure, history
+%% @ 2009/05/01
+%%   Initialization: page layout, title, header/footer
+%%----------------------------------------------------------------------
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{zeal}[2009/11/17 LaTeX Zeal package]
+
+%%%%%%%[ default values ]%%%%%%%
+\@ifundefined{ZHyperref}{%
+  \def\ZHyperref{colorlinks=true,linkcolor=yellow,bookmarksnumbered}}{}
+\@ifundefined{ZPdfTitle}{}{%
+  \expandafter\def\expandafter\ZHyperref\expandafter{\ZHyperref,pdftitle={\ZPdfTitle}}}
+\@ifundefined{ZPdfAuthor}{}{%
+  \expandafter\def\expandafter\ZHyperref\expandafter{\ZHyperref,pdfauthor={\ZPdfAuthor}}}
+\@ifundefined{ZPdfSubject}{}{%
+  \expandafter\def\expandafter\ZHyperref\expandafter{\ZHyperref,pdfsubject={\ZPdfSubject}}}
+
+%%%%%%%[ available options ]%%%%%%%
+\newif \ifz@code      \z@codetrue     % include code
+\newif \ifz@ltable    \z@ltabletrue   % long table
+\newif \ifz@compress  \z@compressfalse % compression
+
+\DeclareOption{nocode}{\z@codefalse}
+\DeclareOption{noltable}{\z@ltablefalse}
+\DeclareOption{compress}{\z@compresstrue}
+\ProcessOptions\relax
+
+%\DeclareOption*{\PassOptionsToClass{\CurrentOption}{article}}
+%%%%%%%[ dependencies ]%%%%%%%
+\PassOptionsToPackage{\ZHyperref}{hyperref}
+%\RequirePackage{color}
+%\RequirePackage{array}
+\RequirePackage{colortbl}
+\PassOptionsToPackage{table}{xcolor}
+
+%\RequirePackage{ifpdf}
+%\ifpdf
+%  \PassOptionsToPackage{pdftex}{graphicx}
+\RequirePackage{graphicx}
+%  \ifz@compress
+%    \pdfminorversion=5
+%    \pdfcompresslevel=9
+%    \pdfobjcompresslevel=2
+%  \fi
+%\else
+%  \RequirePackage{graphicx}
+%\fi
+
+%\RequirePackage{caption}
+
+%%%%%%%[ colors/style ]%%%%%%%
+\@ifundefined{ZColorTHead}{%
+  \definecolor{ZColorTHead}{rgb}{0.90,0.90,0.90}}{}
+%% row height in tabular
+\@ifundefined{ZRowHeight}{%
+  \def\ZRowHeight{1.3}}{}% default: 1.0
+
+%% for syntax highlighting
+\@ifundefined{ZColorKeyword}{%
+  \definecolor{ZColorKeyword}{rgb}{0.00,0.00,0.50}}{}
+\@ifundefined{ZColorComment}{%
+  \definecolor{ZColorComment}{rgb}{0.50,0.50,0.50}}{}
+\@ifundefined{ZColorString}{%
+  \definecolor{ZColorString}{rgb}{0.00,0.50,0.00}}{}
+\@ifundefined{ZColorIdentifier}{%
+  \definecolor{ZColorIdentifier}{rgb}{0.00,0.00,0.00}}{}
+\@ifundefined{ZColorEmph}{%
+  \definecolor{ZColorEmph}{rgb}{0.50,0.00,0.50}}{}
+\@ifundefined{ZColorFrame}{%
+  \definecolor{ZColorFrame}{rgb}{0.80,0.80,0.80}}{}
+\@ifundefined{ZColorFrameBg}{%
+  \definecolor{ZColorFrameBg}{rgb}{1.00,1.00,1.00}}{}
+\@ifundefined{ZColorLineNumber}{%
+  \definecolor{ZColorLineNumber}{rgb}{0.70,0.70,0.70}}{}
+
+
+\@ifundefined{ZStyleCodeBasic}{%
+  \@ifundefined{beamer@version}{%
+    \def\ZStyleCodeBasic{\ttfamily}%
+  }{% smaller size in slide
+    \def\ZStyleCodeBasic{\footnotesize\ttfamily}%
+  }}{}%
+\@ifundefined{ZStyleCodeIdentifier}{%
+  \def\ZStyleCodeIdentifier{\color{ZColorIdentifier}}}{}
+\@ifundefined{ZStyleCodeKeyword}{%
+  \def\ZStyleCodeKeyword{\color{ZColorKeyword}\bfseries}}{}
+\@ifundefined{ZStyleCodeComment}{%
+  \def\ZStyleCodeComment{\color{ZColorComment}\slshape}}{}
+\@ifundefined{ZStyleCodeString}{%
+  \def\ZStyleCodeString{\color{ZColorString}}}{}
+\@ifundefined{ZStyleCodeEmph}{%
+  \def\ZStyleCodeEmph{\color{ZColorEmph}}}{}
+\@ifundefined{ZStyleCodeLineNumber}{%
+  \@ifundefined{beamer@version}{%
+    \def\ZStyleCodeLineNumber{\color{ZColorLineNumber}\footnotesize}%
+  }{% smaller size in slide
+    \def\ZStyleCodeLineNumber{\color{ZColorLineNumber}\tiny}%
+  }}{}%
+
+
+%%%%%%%[ new commands/environments ]%%%%%%%
+%% shortcut for new line in table
+\newcommand{\tn}{\tabularnewline}
+\newcommand{\tnh}{\tabularnewline\hline}
+\newcommand{\zlabel}[1]{%
+  \ifx @#1@ \@empty\else\label{#1}\fi}
+\newcommand{\zcaption}[1]{%
+  \ifx @#1@ \@empty\else\caption{#1}\fi}
+
+
+%% new column type that can be used with \rowstyle
+\newcolumntype{+}{>{\global\let\zrowstyle\relax}}
+\newcolumntype{^}{>{\zrowstyle}}
+\newcommand{\rowstyle}[1]{\gdef\zrowstyle{#1}%
+   #1\ignorespaces
+}
+\newcolumntype{C}[1]{>{\centering}p{#1}}
+\newcolumntype{L}[1]{>{\raggedright}p{#1}}
+\newcolumntype{R}[1]{>{\raggedleft}p{#1}}
+
+
+%% Table: Auto color the header
+%% Params: 1: First row format
+%%         2: Label, 3:Caption, 4:Columns
+\RequirePackage{float}
+\newenvironment{ztable}[4][\hline\rowcolor{ZColorTHead}]{%
+  \def\z@caption{\zcaption{#3}}% caption
+  \def\z@label{\zlabel{#2}}% label
+  \begin{table}[H] % rather than h!
+    \centering
+    \begin{tabular}{#4}%
+      #1%
+}{%
+    \end{tabular}%
+    \z@caption
+    \z@label
+  \end{table}%
+}
+
+
+%% Long table
+\ifz@ltable
+  \RequirePackage{longtable}%
+  \newenvironment{ztableL}[4][\hline\rowcolor{ZColorTHead}]{%
+    \def\z@caption{\zcaption{#3}}% caption
+    \def\z@label{\zlabel{#2}}% label
+    \begin{center}%
+    \begin{longtable}{#4}%
+      #1%
+  }{%
+      \z@caption%
+      \z@label%
+    \end{longtable}%
+    \end{center}%
+  }%
+\fi
+
+
+%% Figure
+%% Params: [1:ImageOptions], 2:Label, 3:Caption, 4:Path
+%% default ImageOptions: scale=1
+\newcommand{\zfigure}[4][width=\textwidth]{%
+  \begin{figure}[H] % rather than h!
+    \centering%
+    \includegraphics[#1]{#4}%
+    \zcaption{#3}%
+    \zlabel{#2}%
+  \end{figure}%
+}
+
+
+\newenvironment{zquote}[1]{%
+  \def\z@quote{\begin{flushright}#1\end{flushright}}
+  \begin{quote}
+}{%
+  \z@quote
+  \end{quote}%
+}
+
+%% Code box
+%% defined only with 'code' option
+\ifz@code
+  \RequirePackage{listings}
+
+  \newcommand{\zcodedefcmd}[3][\alert]{%
+    \lstset{moredelim=[is][#1<#3>]{/#2#3~}{~#2/}}%
+  }
+  \newcommand{\zcodedefalert}[1]{%
+    \zcodedefcmd[\alert]{@}{#1}
+  }
+  \newcommand{\zcodedefuncover}[1]{%
+    \zcodedefcmd[\uncover]{~}{#1}
+  }
+
+  \lstdefinestyle{zcodestyle}{
+    backgroundcolor=\color{ZColorFrameBg},
+    basicstyle=\ZStyleCodeBasic,
+    identifierstyle=\ZStyleCodeIdentifier,
+    keywordstyle=\ZStyleCodeKeyword,
+    commentstyle=\ZStyleCodeComment,
+    stringstyle=\ZStyleCodeString,
+    emphstyle=\ZStyleCodeEmph,
+    tabsize=2,
+    showspaces=false,% show spaces adding particular underscores
+    showstringspaces=false,% underline spaces within strings
+    showtabs=false,% show tabs within strings through particular underscores
+    %prebreak={\raisebox{0ex}[0ex][0ex]{\color{ZColorLineNumber}\ensuremath{\hookleftarrow}}},
+    postbreak={\space\raisebox{0pt}[0pt][0pt]{\color{ZColorLineNumber}\ensuremath{\hookrightarrow}}},
+    breakindent=0pt,
+    breakautoindent=true,
+    columns=fixed,
+    %tab=\rightarrowfill
+    breaklines=true,% sets automatic line breaking
+    breakatwhitespace=true,% automatic breaks happen at whitespace
+    frame=single,% none | trBL | shadowbox % adds a frame around the code
+    %frameround=fttt,% from upper right corner, continues clockwise, t: corner round
+    %rulesepcolor=\color{blue},% use with frame=shadowbox
+    rulecolor=\color{ZColorFrame},
+%    framesep=2pt,
+%    framexleftmargin=15pt,
+%    xleftmargin=15pt,
+%    xrightmargin=0em,
+%    commandchars=~[],
+    captionpos=b,
+    numberstyle=\ZStyleCodeLineNumber,
+    stepnumber=1,% the step between two line-numbers
+    %firstnumber=100 % last | auto (with name=Test)
+%    moredelim=[is][\alert<1>]{/~1~}{~~/}, %input latex commands in listings
+    %moredelim=[is][\alert<2>]{/~2~}{~~/},
+    %moredelim=[is][\alert<3>]{/~3~}{~~/},
+    %moredelim=[is][\alert<4>]{/~4~}{~~/},
+    %moredelim=[is][\alert<5>]{/~5~}{~~/},
+    %moredelim=[is][\alert<6>]{/~6~}{~~/},
+    %moredelim=[is][\alert<7>]{/~7~}{~~/},
+    %moredelim=[is][\alert<8>]{/~8~}{~~/},
+    %moredelim=[is][\alert<9>]{/~9~}{~~/},
+  }%
+
+  \lstdefinestyle{zcodenumberstyle}{
+    framexleftmargin=4ex,
+    xleftmargin=4ex,
+    numbersep=2ex, % how far the line-numbers are from the code
+    numbers=left,%where to put the line-numbers
+  }%
+
+  \lstnewenvironment{zcode}[1][]{%
+    \noindent%
+    \lstset{style=zcodestyle}%
+    \lstset{#1}%
+  }{}%
+
+  \newcommand{\zcodeinput}[2][]{%
+    \noindent%
+    \lstinputlisting[style=zcodestyle,#1]{#2}%
+  }%
+
+  % with line numbers
+  \lstnewenvironment{zcodeN}[1][]{%
+    \noindent%
+    \lstset{style=zcodestyle}%
+    \lstset{style=zcodenumberstyle}%
+    \lstset{#1}%
+  }{}%
+
+  \newcommand{\zcodeinputN}[2][]{%
+    \noindent%
+    \lstinputlisting[style=zcodestyle,style=zcodenumberstyle,#1]{#2}%
+  }%
+\fi
+
+
+%%%%%%%[ section ]%%%%%%%
+\newcommand{\zsection}[3][]{%
+  \ifx @#1@ \@empty
+    \section{#3}%
+  \else
+    \section[#1]{#3}%
+  \fi
+  \zlabel{#2}%
+}
+\newcommand{\zsectionS}[3][]{%
+  \ifx @#1@ \@empty
+    \subsection{#3}%
+  \else
+    \subsection[#1]{#3}%
+  \fi
+  \zlabel{#2}%
+}
+\newcommand{\zsectionSS}[3][]{%
+  \ifx @#1@ \@empty
+    \subsubsection{#3}%
+  \else
+    \subsubsection[#1]{#3}%
+  \fi
+  \zlabel{#2}%
+}
+
+% section level 4,5 (only available in article
+\@ifundefined{paragraph}{}{%
+  % reformat paragraph and subparagraph
+  \renewcommand\paragraph{\@startsection{paragraph}{4}{\z@}%
+    {-3.25ex \@plus -1ex \@minus -.2ex}%
+    {1.5ex \@plus .2ex}%
+    {\normalfont\normalsize\bfseries}%
+  }%
+  \renewcommand\subparagraph{\@startsection{subparagraph}{5}{\z@}%
+    {-3.25ex \@plus -1ex \@minus -.2ex}%
+    {1.5ex \@plus .2ex}%
+    {\normalfont\normalsize\bfseries}%
+  }%
+
+  % using para and subpara as a subsubsubsection
+  \newcommand{\zsectionSSS}[3][]{%
+    \ifx @#1@ \@empty
+      \paragraph{#3}%
+    \else
+      \paragraph[#1]{#3}%
+    \fi
+    \zlabel{#2}%
+  }%
+  \newcommand{\zsectionSSSS}[3][]{%
+    \ifx @#1@ \@empty
+      \subparagraph{#3}%
+    \else
+      \subparagraph[#1]{#3}%
+    \fi
+    \zlabel{#2}%
+  }%
+}
+
+%% global counter
+\newcounter{zcounter}
+\newcommand{\zc}[1][-1]{%
+  \ifnum #1<0
+    \stepcounter{zcounter}%
+  \else
+    \setcounter{zcounter}{#1}%
+  \fi
+  \arabic{zcounter}%
+}
+
+%% include section number in caption
+\@addtoreset{figure}{section}
+\@addtoreset{table}{section}
+\renewcommand{\thefigure}{\thesection.\arabic{figure}}
+\renewcommand{\thetable}{\thesection.\arabic{table}}
+
+%% beamer frame
+\newenvironment{zframe}[1][fragile]{%
+  \begin{frame}[environment=zframe,#1]%
+  \frametitle{\insertsection}%
+  \framesubtitle{\insertsubsection}%
+}{%
+  \end{frame}%
+}
+
+%% frame with overprint
+\newenvironment{zframeO}[1][fragile]{%
+  \begin{frame}[environment=zframeO,#1]%
+  \frametitle{\insertsection}%
+  \framesubtitle{\insertsubsection}%
+  \begin{overprint}%
+}{%
+  \end{overprint}%
+  \end{frame}%
+}
+
+
+%% End of file 'zeal.sty'
+
