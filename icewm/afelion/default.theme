@@ -1,0 +1,123 @@
+ThemeDescription="IceGil Lite"
+ThemeAuthor="Based on Jan Engelhardt's theme"
+
+Look=flat
+RolloverButtonsSupported=0
+
+#TitleButtonsSupported="xmisrh"
+#TitleButtonsRight="xmi"
+TitleButtonsSupported="xmirs"
+TitleButtonsRight="xmir"
+TitleButtonsLeft="s"
+TitleBarHeight=18
+
+TitleBarJustify=50
+
+BorderSizeX=2
+BorderSizeY=2
+CornerSizeX=24
+CornerSizeY=24
+DlgBorderSizeX=1
+DlgBorderSizeY=1
+
+MenuMouseTracking=1 
+ShowMenuButtonIcon=1
+
+ColorNormalButton="rgb:40/40/40"
+ColorNormalButtonText="rgb:ff/ff/ff"
+ColorActiveButton="rgb:00/00/00"
+ColorActiveButtonText="rgb:ff/ff/ff"
+
+# Title bar
+ColorActiveTitleBar="rgb:40/40/40"
+ColorActiveTitleBarText="rgb:ff/ff/ff"
+ColorActiveTitleBarShadow="rgb:00/00/00"
+
+ColorNormalTitleBar="rgb:20/20/20"
+ColorNormalTitleBarText="rgb:80/80/80"
+
+# Border
+ColorActiveBorder="rgb:40/40/40"
+ColorNormalBorder="rgb:40/40/40"
+
+ColorDialog="rgb:80/80/80"
+ColorListBox="rgb:80/80/80"
+ColorListBoxText="rgb:00/00/00"
+ColorListBoxSelection="rgb:4c/59/a6"
+ColorListBoxSelectionText="rgb:ff/ff/ff"
+ColorScrollBar="rgb:00/00/00"
+ColorScrollBarSlider="rgb:00/00/00"
+ColorScrollBarButton="rgb:00/00/00"
+ColorScrollBarButtonArrow="rgb:00/00/00"
+ColorLabel="rgb:00/00/00"
+ColorLabelText="rgb:4c/59/a6"
+
+# Menu
+ColorNormalMenu="rgb:40/40/40"
+ColorActiveMenuItem="rgb:30/30/30"
+ColorNormalMenuItemText="rgb:ff/ff/ff"
+ColorActiveMenuItemText="rgb:ff/ff/ff"
+ColorDisabledMenuItemText="rgb:80/80/80"
+
+# Taskbar
+ColorDefaultTaskBar="rgb:40/40/40"
+ColorNormalTaskBarApp="rgb:40/40/40"
+ColorNormalTaskBarAppText="rgb:ff/ff/ff"
+ColorInvisibleTaskBarApp="rgb:40/40/40"
+ColorInvisibleTaskBarAppText="rgb:ff/ff/ff"
+ColorActiveTaskBarApp="rgb:20/20/20"
+ColorActiveTaskBarAppText="rgb:ff/ff/ff"
+ColorMinimizedTaskBarApp="rgb:40/40/40"
+ColorMinimizedTaskBarAppText="rgb:ff/ff/ff"
+ColorNormalWorkspaceButton="rgb:40/40/40"
+ColorActiveWorkspaceButton="rgb:20/20/20"
+
+ColorInput="rgb:40/40/40"
+ColorInputText="rgb:ff/ff/ff"
+
+# Clock
+ColorClock=""
+ColorClockText="rgb:ff/ff/ff"
+
+# Indicator
+ColorCPUStatusUser="rgb:41/69/e1"
+ColorCPUStatusSystem="rgb:d2/69/e1"
+ColorCPUStatusNice="rgb:87/ce/eb"
+ColorCPUStatusIdle="rgb:00/00/00"
+
+ColorNetSend="rgb:d2/69/1e"
+ColorNetReceive="rgb:41/69/e1"
+ColorNetIdle="rgb:00/00/00"
+
+# Tooltip
+ColorToolTip="rgb:40/40/40"
+ColorToolTipText="rgb:ff/ff/ff"
+
+ColorMoveSizeStatus="rgb:ce/ce/ce"
+ColorMoveSizeStatusText="rgb:00/00/00"
+
+ColorQuickSwitch="rgb:40/40/40"
+ColorQuickSwitchText="rgb:ff/ff/ff"
+
+# Font Specification
+TitleFontNameXft		=sans-serif:size=9:bold
+MenuFontNameXft			=sans-serif:size=9
+MinimizedWindowFontNameXft	=sans-serif:size=9
+ActiveButtonFontNameXft		=sans-serif:size=9
+NormalButtonFontNameXft		=sans-serif:size=9
+ToolButtonFontNameXft		=sans-serif:size=9
+NormalWorkspaceFontNameXft	=sans-serif:size=9
+ActiveWorkspaceFontNameXft	=sans-serif:size=9
+QuickSwitchFontNameXft		=sans-serif:size=9
+ListBoxFontNameXft		=sans-serif:size=9
+StatusFontNameXft		=sans-serif:size=9
+ToolTipFontNameXft		=sans-serif:size=9
+ActiveTaskBarFontNameXft	=sans-serif:size=9
+NormalTaskBarFontNameXft	=sans-serif:size=9
+ClockFontNameXft		=sans-serif:size=9
+InputFontNameXft		=sans-serif:size=9
+
+TaskBarClockLeds=0
+DesktopBackgroundColor = "rgb:00/00/00"
+#DesktopBackgroundCenter = 1
+#DesktopBackgroundImage = '/path/to/bg.jpg'
