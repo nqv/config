@@ -28,22 +28,24 @@ static int get_batt(char *st)
 	/* present */
 	f_ = fopen(BATT "present", "r");
 	if (f_ == NULL) {
-		return 0;
+		goto no_batt;
 	}
 	if (fread(buf_, 1, sizeof(buf_), f_) <= 0) {
-		goto err;
+		fclose(f_);
+		goto no_batt;
 	}
 	fclose(f_);
 	if (buf_[0] != '1') {	/* no battery */
-		return sprintf(st, "--");
+		goto no_batt;
 	}
 	/* status */
 	f_ = fopen(BATT "status", "r");
 	if (f_ == NULL) {
-		return 0;
+		goto no_batt;
 	}
 	if (fread(buf_, 1, sizeof(buf_), f_) <= 0) {
-		goto err;
+		fclose(f_);
+		goto no_batt;
 	}
 	fclose(f_);
 	if (strncmp(buf_, "Full", 4) == 0) {
@@ -64,9 +66,9 @@ static int get_batt(char *st)
 	fscanf(f_, "%u", &now);
 	fclose(f_);
 	return sprintf(st, "%d%c", now * 100 / full, charge);
-err:
-	fclose(f_);
-	return 0;
+
+no_batt:
+	return sprintf(st, "--");
 }
 
 static int get_mem(char *st)

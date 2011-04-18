@@ -9,7 +9,7 @@
 	font="sans-8"
 	raisefocus=true
 	raiseswitch=false
-	focus_follow_mouse=true
+	focus_follow_mouse=false
 	focus_follow_movement=false
 	opacity=255
 
@@ -17,7 +17,7 @@
 	# true  -- default, set focus
 	# false -- click go to client; including dockapps
 	focus_pointer_click=true
-	status_timing=5     #seconds
+	status_timing=7     #seconds
 	status_path="~/.config/wmfs/status.sh"
 [/misc]
 
@@ -31,12 +31,12 @@
 #	dark_shade=0.0
 
 	[systray]
-	# Enable/disable systray
-	active=true
-	# Screen of systray
-	screen=0
-	# Spacing between tray icons
-	spacing=3
+		# Enable/disable systray
+		active=true
+		# Screen of systray
+		screen=0
+		# Spacing between tray icons
+		spacing=3
 	[/systray]
 
 	# Remove this section to disable the selbar.
@@ -207,10 +207,10 @@
 		fg_normal="#666666"
 		fg_focus="#CCCCCC"
 
-#		[mouse] button="1" func="client_raise" [/mouse]
-#		[mouse] button="1" func="mouse_move"   [/mouse]
-#		[mouse] button="3" func="client_raise" [/mouse]
-#		[mouse] button="3" func="mouse_resize" [/mouse]
+		[mouse] button="1" func="client_raise" [/mouse]
+		[mouse] button="1" func="mouse_move"   [/mouse]
+		[mouse] button="3" func="client_raise" [/mouse]
+		[mouse] button="3" func="mouse_resize" [/mouse]
 
 #		[button]
 #			# Available "free", "max", "tile" flags or button.
@@ -226,10 +226,12 @@
 [/client]
 
 [rules]
-	[rule] class="Iceweasel" tag=5 [/rule]
-	[rule] class="Jumanji" tag=4 [/rule]
+	[rule] class="Jumanji" tag=5 [/rule]
+	[rule] class="Midori" tag=6 [/rule]
+	[rule] class="Iceweasel" tag=6 [/rule]
 	[rule] class="Pidgin" tag=9 [/rule]
 	[rule] class="Skype" tag=9 [/rule]
+	[rule] class="VirtualBox" tag=7 free=true [/rule]
 
 	# Example of rule for MPlayer
 	[rule]
@@ -250,16 +252,15 @@
 	[set_launcher]
 		# Limit size of the launcher window (px)
 		width_limit=300
-
 		name="launcher_exec"
-		prompt="$"
+		prompt=">"
 		command="exec"
 	[/set_launcher]
 
-	#ViWMFS : manage wmfs with vi-based command.
+	# ViWMFS: manage wmfs with vi-based command.
 	[set_launcher]
 		name="viwmfs"
-		prompt=">"
+		prompt=":"
 		command="wmfs -V"
 	[/set_launcher]
 [/launcher]
