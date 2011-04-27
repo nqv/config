@@ -75,14 +75,25 @@ DICT_HEAD_TPL = """<?xml version="1.0" encoding="utf-8"?>
 DICT_TAIL_TPL = """  </body>
 </html>
 """
-DICT_ENTRY_TPL = """<idx:entry>
-  <h6><idx:orth>%s</idx:orth></h6>
-  <idx:key key=%s />
-  %s
-</idx:entry>
-<hr/>
+DICT_ENTRY_TPL = """<idx:entry>%s%s</idx:entry><hr/>
 """
+DICT_ORTH_TPL = """<b><idx:orth>%s</idx:orth></b>"""
 DICT_MAX_ENTRY = 50000
+
+###
+
+def reformat_stardict(line):
+    dt, dd = line.split("\t", 1)
+    dk = "<idx:key key=%s />" % quoteattr(dt)
+    if dd.startswith("@" + dt):
+        dd = dd[(len(dt) + 1):]
+        dd = escape(dd).replace("\\\\", "\\").replace("\r", "").replace("\n", "").replace("\\n", "<br/>")
+        dd = (("@" + DICT_ORTH_TPL) % escape(dt)) + dd
+        dt = dk
+    else:
+        dt = (DICT_ORTH_TPL + "<br />") % escape(dt) + dk
+        dd = escape(dd).replace("\\\\", "\\").replace("\r", "").replace("\n", "").replace("\\n", "<br/>")
+    return dt, dd
 
 ###
 
@@ -103,8 +114,6 @@ fout = None
 dict_list = []
 
 for line in fin:
-    dt, dd = line.split("\t", 1)
-    
     if i % DICT_MAX_ENTRY == 0:
         if fout:
             fout.write(DICT_TAIL_TPL)
@@ -113,13 +122,11 @@ for line in fin:
         fout = open("%s.html" % d_id, "w")
         fout.write(DICT_HEAD_TPL)
         dict_list.append(d_id)
-        print("%d\t\t%s\t\t%s" % (i, d_id, dt))
-    
-    dk = quoteattr(dt)
-    dt = escape(dt)
-    dd = escape(dd).replace("\\\\", "\\").replace("\r", "").replace("\n", "").replace("\\n", "<br/>")
-    fout.write(DICT_ENTRY_TPL % (dt, dk, dd))
-    i += 1 
+        print("%d\t\t%s" % (i, d_id))
+
+    dt, dd = reformat_stardict(line)
+    fout.write(DICT_ENTRY_TPL % (dt, dd))
+    i += 1
 
 if fout:
     fout.write(DICT_TAIL_TPL)
