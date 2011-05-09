@@ -5,7 +5,7 @@
 # to convert StarDict's dictionaries to Kindle format.
 #
 # Author: Viet Nguyen Quoc
-# License: BSD License
+# License: New BSD License
 # References:
 # 1. StarDict tabfile format
 #    http://stardict.sourceforge.net/HowToCreateDictionary
@@ -15,13 +15,16 @@
 #    http://stardict.sourceforge.net/other.php
 # 4. KindleGen
 #    http://www.amazon.com/kindlepublishing
+# Usage:
+# $ python tab-opf.py [-i <INFLECTIONS_FILE>] <TAB_FILE>
+# $ kindlegen output.odf
 #
 
 import sys
+import getopt
 from xml.sax.saxutils import escape
 from xml.sax.saxutils import quoteattr
 
-OPF_NAME = "en-vi"
 OPF_TPL = """<?xml version="1.0" encoding="utf-8"?>
 <package unique-identifier="uid">
 <metadata>
@@ -55,6 +58,7 @@ OPF_STARTPAGE_TPL = """<?xml version="1.0" encoding="utf-8"?>
   <h3>English-Vietnamese Dictionary</h3>
   <div>Copyright &copy; by Open Vietnamese Dictionaries Project. URL: <a href="http://www.tudientiengviet.net" title="OVDP">www.tudientiengviet.net</a></div>
   <div>Data conversion: Viet Nguyen Quoc</div>
+  <div>Scripts: <a href="http://github.com/vietnq/conf/tree/master/scripts" title="scripts">github.com/vietnq</a></div>
 </body>
 </html>
 """
@@ -77,31 +81,88 @@ DICT_TAIL_TPL = """  </body>
 """
 DICT_ENTRY_TPL = """<idx:entry>%s%s</idx:entry><hr/>
 """
-DICT_ORTH_TPL = """<b><idx:orth>%s</idx:orth></b>"""
+DICT_KEY_TPL = """<idx:key key=%s/>"""
+DICT_ORTH_TPL = """<b><idx:orth>%s%s</idx:orth></b>"""
+DICT_INFL_TPL = """<idx:infl>%s</idx:infl>"""
+DICT_IFORM_TPL = """<idx:iform value=%s/>"""
+
 DICT_MAX_ENTRY = 50000
 
 ###
 
 def reformat_stardict(line):
     dt, dd = line.split("\t", 1)
-    dk = "<idx:key key=%s />" % quoteattr(dt)
+    dk = DICT_KEY_TPL % quoteattr(dt)
+    df = ''
+    if infl_c is not None:
+        # search for inflection words
+        infl_c.execute('SELECT n, v, a FROM infl WHERE k=?', (dt,))
+        row = infl_c.fetchone()
+        if row is not None:
+            for val in row:
+                df += gen_infl(val)
+    if len(df) > 0:
+        df = DICT_INFL_TPL % df
+
     if dd.startswith("@" + dt):
         dd = dd[(len(dt) + 1):]
         dd = escape(dd).replace("\\\\", "\\").replace("\r", "").replace("\n", "").replace("\\n", "<br/>")
-        dd = (("@" + DICT_ORTH_TPL) % escape(dt)) + dd
+        dd = (("@" + DICT_ORTH_TPL) % (escape(dt), df)) + dd
         dt = dk
     else:
-        dt = (DICT_ORTH_TPL + "<br />") % escape(dt) + dk
+        dt = ((DICT_ORTH_TPL + "<br />") % (escape(dt), df)) + dk
         dd = escape(dd).replace("\\\\", "\\").replace("\r", "").replace("\n", "").replace("\\n", "<br/>")
     return dt, dd
 
-###
+def gen_infl(val):
+    if val is None:
+        return ''
+    f = ''        
+    val = val.split(' | ')
+    for v in val:
+        if v.find('?') < 0:
+            f += DICT_IFORM_TPL % quoteattr(v)
+    return f
 
-if len(sys.argv) > 1:
-    file_path = sys.argv[1]
-else:
-    print("Usage: python %s <FILE>" % sys.argv[0])
+def usage():
+    print("Usage: python %s [OPTIONS] <FILE>" % sys.argv[0])
+    print("  -o <NAME>         Output file name")
+    print("  -e                Norminalize (encode) key")
+    print("  -f <PATH>         Inflection file")
+
+### main ###
+fout = None
+dict_list = []
+encode_key = False
+file_name = "output"
+infl_name = None
+infl_conn = None
+infl_c = None
+
+try:
+    opts, args = getopt.getopt(sys.argv[1:], "heo:f:")
+except getopt.GetoptError, err:
+    # print help information and exit:
+    print str(err) # will print something like "option -a not recognized"
+    usage()
     sys.exit(1)
+
+if len(args) == 0:
+    usage()
+    sys.exit(1)
+
+file_path = args[0]
+
+for o, a in opts:
+    if (o == "-h"):
+        usage()
+        sys.exit(0)
+    elif (o == "-e"):
+        encode_key = True
+    elif (o == "-o"):
+        file_name = a
+    elif (o == "-f"):
+        infl_name = a
 
 try:
     fin = open(file_path, "r")
@@ -109,16 +170,19 @@ except IOError:
     print("Could not open file: %s" % file_path)
     sys.exit(2)
 
-i = 0
-fout = None
-dict_list = []
+if infl_name is not None:
+    import sqlite3
+    infl_conn = sqlite3.connect(infl_name)
+    infl_conn.text_factory = str
+    infl_c = infl_conn.cursor()
 
+i = 0
 for line in fin:
     if i % DICT_MAX_ENTRY == 0:
         if fout:
             fout.write(DICT_TAIL_TPL)
             fout.close()
-        d_id = "%s-%d" % (OPF_NAME, i / DICT_MAX_ENTRY)
+        d_id = "%s-%d" % (file_name, i / DICT_MAX_ENTRY)
         fout = open("%s.html" % d_id, "w")
         fout.write(DICT_HEAD_TPL)
         dict_list.append(d_id)
@@ -127,6 +191,8 @@ for line in fin:
     dt, dd = reformat_stardict(line)
     fout.write(DICT_ENTRY_TPL % (dt, dd))
     i += 1
+#    if (i == 100000):
+#        break
 
 if fout:
     fout.write(DICT_TAIL_TPL)
@@ -134,19 +200,22 @@ if fout:
 
 fin.close()
 
-fout = open("%s-start.html" % OPF_NAME, "w")
+fout = open("%s-start.html" % file_name, "w")
 fout.write(OPF_STARTPAGE_TPL)
 fout.close()
 
-mainifest = OPF_MAINIFEST_STARTPAGE_TPL % (OPF_NAME, OPF_NAME)
-spine = OPF_SPINE_STARTPAGE_TPL % OPF_NAME
-guide = OPF_GUIDE_STARTPAGE_TPL % OPF_NAME
+mainifest = OPF_MAINIFEST_STARTPAGE_TPL % (file_name, file_name)
+spine = OPF_SPINE_STARTPAGE_TPL % file_name
+guide = OPF_GUIDE_STARTPAGE_TPL % file_name
 
-fout = open("%s.opf" % OPF_NAME, "w")
+fout = open("%s.opf" % file_name, "w")
 for d_id in dict_list:
     mainifest += OPF_MAINIFEST_TPL % (d_id, d_id)
     spine += OPF_SPINE_TPL % d_id
 
 fout.write(OPF_TPL % (mainifest, spine, guide))
 fout.close()
+
+if infl_c is not None:
+    infl_c.close()
 
