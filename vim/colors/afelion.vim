@@ -1,6 +1,5 @@
 " Vim color file
 " Author: VietNQ
-" Last Change: 2009-09-20
 
 " First remove all existing highlighting.
 set background=dark
@@ -74,7 +73,7 @@ hi Type ctermfg=Green guifg=LimeGreen
 "  hi StorageClass ctermfg=Yellow guifg=Yellow
 hi Ignore ctermfg=7 guifg=bg
 hi Error term=reverse cterm=bold ctermfg=LightGray ctermbg=Red gui=bold guifg=White guibg=Red
-hi Todo term=standout ctermfg=Blue ctermbg=Yellow guifg=Blue guibg=Yellow
+hi Todo term=standout cterm=bold ctermfg=LightBlue ctermbg=Black gui=bold guifg=Black guibg=Yellow
 "hi Underlined ctermbg=Black ctermfg=White guibg=bg guifg=#00a0ff gui=underline
 
 "*Comment	any comment

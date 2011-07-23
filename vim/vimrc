@@ -5,7 +5,9 @@ filetype plugin on
 colorscheme afelion
 
 "enable use of mouse
-set mouse=a
+if has('mouse_xterm')
+  set mouse=a
+endif
 set autochdir
 
 " vim features 
@@ -24,7 +26,7 @@ set shiftwidth=2
 
 "set expandtab "Spaces instead of tabs
 set autoindent "Always set auto indenting on
-set smartindent " Auto indent after a {
+set nosmartindent " Auto indent after a {
 set smartcase
 set ignorecase "ignore case
 
@@ -80,10 +82,30 @@ inoremap <C-Up> <C-o>gk
 noremap  <C-Down> gj
 inoremap <C-Down> <C-o>gj
 
-"noremap  <Up> gk
-"inoremap <Up> <C-o>gk
-"noremap  <Down> gj
-"inoremap <Down> <C-o>gj
+" Switch tabs
+noremap  <C-Tab> gt
+inoremap <C-Tab> <C-o>gt
+noremap  <C-S-Tab> gT
+inoremap <C-S-Tab> <C-o>gT
+
+noremap  <C-1> 1gt
+inoremap <C-1> <C-o>1gt
+noremap  <C-2> 2gt
+inoremap <C-2> <C-o>2gt
+noremap  <C-3> 3gt
+inoremap <C-3> <C-o>3gt
+noremap  <C-4> 4gt
+inoremap <C-4> <C-o>4gt
+noremap  <C-5> 5gt
+inoremap <C-5> <C-o>5gt
+noremap  <C-6> 6gt
+inoremap <C-6> <C-o>6gt
+noremap  <C-7> 7gt
+inoremap <C-7> <C-o>7gt
+noremap  <C-8> 8gt
+inoremap <C-8> <C-o>8gt
+noremap  <C-9> 9gt
+inoremap <C-9> <C-o>9gt
 
 " resize
 noremap <leader>+ <C-W>+
@@ -109,6 +131,8 @@ map! <S-Insert> <MiddleMouse>
 
 " map Ctrl-d to cut lines
 inoremap <C-d> <C-o>dd
+inoremap <C-Del> <C-o>dw
+inoremap <C-Backspace> <C-o>db
 
 " delete from cursor to end of line
 "inoremap <C-S-d> <C-o>D
@@ -124,9 +148,16 @@ inoremap <C-u> <C-o>u
 
 " save
 map  <F2>  <ESC>:w<CR>
-map! <F2>  <C-o>:w<CR>
+imap <F2>  <C-o>:w<CR>
 "map <F3>       :set number!<CR>:set number?<CR>
 "imap <F3> <C-o>:set number!<CR><C-o>:set number?<CR>
+
+map  <F7> <ESC>:NERDTreeToggle<CR>
+imap <F7> <C-o>:NERDTreeToggle<CR>
+
+map  <F8> <ESC>:TlistToggle<CR>
+imap <F8> <C-o>:TlistToggle<CR>
+nmap <C-F8> :!ctags -R --c-kinds=+p --c++-kinds=+p --fields=+iaS --extra=+q .<CR>
 
 " show tab
 map  <F11> <ESC>:set list!<CR>:set list?<CR>
@@ -136,7 +167,6 @@ imap <F11> <C-o>:set list!<CR><C-o>:set list?<CR>
 map  <F10> <ESC>:set hlsearch!<CR>:set hlsearch?<CR>
 imap <F10> <C-o>:set hlsearch!<CR><C-o>:set hlsearch?<CR>
 
-"nmap <silent> <C-F6> :TlistToggle<CR>
 " turn spelling on (VIM 7.0+)
 map  <F12> <ESC>:setlocal spell! spelllang=en_us<CR>
 imap <F12> <C-o>:setlocal spell! spelllang=en_us<CR>
@@ -179,6 +209,8 @@ command! W w !sudo tee % > /dev/null
 
 command DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis | wincmd p | diffthis
 
+" ctags
+set tags=./tags;
 
 " DoxygenToolkit
 let g:DoxygenToolkit_authorName="vietnq"
@@ -195,7 +227,8 @@ set completeopt=longest,menuone " show preview of function prototype
 " Latex Suite
 " win32 users will need to have 'shellslash' set so that latex
 " can be called correctly.
-set shellslash  
+set shellslash
+
 " grep will sometimes skip displaying the file name if you
 " search in a singe file. This will confuse Latex-Suite. Set your grep
 " program to always generate a file-name.
@@ -216,10 +249,4 @@ if has('gui_running')
   "set guifont=Bitstream\ Vera\ Sans\ Mono\ 11
 endif
 
-if exists('ctags')
-  map  <F8> <ESC>:TlistToggle<CR>
-  imap <F8> <C-o>:TlistToggle<CR>
-  nmap <C-F8> :!ctags -R --c++-kinds=+p --fields=+iaS --extra=+q .<CR>
-else
-  let Tlist_Ctags_Cmd=''
-endif
+
