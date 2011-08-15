@@ -1,0 +1,17 @@
+
+[Midnight-Commander]
+skin=afelion
+
+[Layout]
+message_visible=0
+keybar_visible=0
+xterm_title=1
+command_prompt=1
+menubar_visible=0
+show_mini_info=1
+free_space=1
+
+[Misc]
+timeformat_recent=%m-%d %H:%M
+timeformat_old=%y-%m-%d %H
+
