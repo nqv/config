@@ -17,8 +17,6 @@
 	# true  -- default, set focus
 	# false -- click go to client; including dockapps
 	focus_pointer_click=true
-	status_timing=7     #seconds
-	status_path="~/.config/wmfs/status.sh"
 [/misc]
 
 [bar]
@@ -73,18 +71,18 @@
 	# layout_button_width=x
 
 	# Tiling layouts.
-	[layout] type="tile_right"         symbol="R" [/layout]
-	[layout] type="tile_left"          symbol="L" [/layout]
-	[layout] type="tile_top"           symbol="T" [/layout]
-	[layout] type="tile_bottom"        symbol="B" [/layout]
-	[layout] type="tile_grid"          symbol="G" [/layout]
-	[layout] type="tile_grid_vertical" symbol="J" [/layout]
-	[layout] type="mirror_vertical"    symbol="V" [/layout]
-	[layout] type="mirror_horizontal"  symbol="H" [/layout]
+	[layout] type="tile_right"         symbol="TR" [/layout]
+	[layout] type="tile_left"          symbol="TL" [/layout]
+	[layout] type="tile_top"           symbol="TT" [/layout]
+	[layout] type="tile_bottom"        symbol="TB" [/layout]
+	[layout] type="tile_grid"          symbol="TG" [/layout]
+	[layout] type="tile_grid_vertical" symbol="TV" [/layout]
+	[layout] type="mirror_vertical"    symbol="MV" [/layout]
+	[layout] type="mirror_horizontal"  symbol="MH" [/layout]
 
 	# Other layouts.
-	[layout] type="max"   symbol="M" [/layout]
-	[layout] type="free"  symbol="F" [/layout]
+	[layout] type="max"   symbol="MX" [/layout]
+	[layout] type="free"  symbol="FR" [/layout]
 
 [/layouts]
 
@@ -155,7 +153,7 @@
 
 [root]
 	# Command you can execute to set the background.
-	background_command="xsetroot -solid black"
+	background_command="xsetroot -solid black; ~/.config/wmfs/status"
 
 	[mouse] button="4" func="tag_next" [/mouse]
 	[mouse] button="5" func="tag_prev" [/mouse]
@@ -232,6 +230,7 @@
 	[rule] class="Pidgin" tag=9 [/rule]
 	[rule] class="Skype" tag=9 [/rule]
 	[rule] class="VirtualBox" tag=7 free=true [/rule]
+	[rule] class="Gimp" free=true [/rule]
 
 	# Example of rule for MPlayer
 	[rule]

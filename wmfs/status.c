@@ -1,14 +1,35 @@
 /*
- * Print system status.
+ * Display system status.
+ *
+ * Author: Nguyen Quoc Viet <afelion@gmail.com>
+ * License: Free
  */
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
 #include <time.h>
 #include <string.h>
+#include <signal.h>
+#include <fcntl.h>
+#include <sys/stat.h>
+
+#define INTERVAL		7
+#define BATT			"/sys/class/power_supply/BAT0/"
+#define CPU			"/proc/stat"
+#define PATH_LOCK    		"/tmp/wmfs-st.lock"
+#define FLAG_EXIT		(1 << 0)
+#define FLAG_DAEMON		(1 << 1)
+
+struct cpu_t {
+	unsigned int total;
+	unsigned int idle;
+};
 
 static char status_[128];
-static char buf_[128];
-static FILE *f_;
+static struct cpu_t pcpu_ = { 0, 0 };
+static int flags_ = FLAG_DAEMON;
+static int lock_fd_ = 0;
 
 static int get_time(char *str)
 {
@@ -17,54 +38,56 @@ static int get_time(char *str)
 
 	time(&raw);
 	info = localtime(&raw);
-	return strftime(str, 24, "%a %Y-%m-%d %H:%M", info);
+	return strftime(str, 24, "%a %m-%d %H:%M", info);
 }
 
-#define BATT	"/sys/class/power_supply/BAT0/"
 static int get_batt(char *st)
 {
 	unsigned int full, now;
 	char charge;
+	FILE *f;
+	char buf[32];
+
 	/* present */
-	f_ = fopen(BATT "present", "r");
-	if (f_ == NULL) {
+	f = fopen(BATT "present", "r");
+	if (f == NULL) {
 		goto no_batt;
 	}
-	if (fread(buf_, 1, sizeof(buf_), f_) <= 0) {
-		fclose(f_);
+	if (fread(buf, 1, sizeof(buf), f) <= 0) {
+		fclose(f);
 		goto no_batt;
 	}
-	fclose(f_);
-	if (buf_[0] != '1') {	/* no battery */
+	fclose(f);
+	if (buf[0] != '1') {	/* no battery */
 		goto no_batt;
 	}
 	/* status */
-	f_ = fopen(BATT "status", "r");
-	if (f_ == NULL) {
+	f = fopen(BATT "status", "r");
+	if (f == NULL) {
 		goto no_batt;
 	}
-	if (fread(buf_, 1, sizeof(buf_), f_) <= 0) {
-		fclose(f_);
+	if (fread(buf, 1, sizeof(buf), f) <= 0) {
+		fclose(f);
 		goto no_batt;
 	}
-	fclose(f_);
-	if (strncmp(buf_, "Full", 4) == 0) {
+	fclose(f);
+	if (strncmp(buf, "Full", 4) == 0) {
 		return sprintf(st, "##");
 	}
-	charge = (strncmp(buf_, "Charging", 8) == 0) ? '+' : '-';
+	charge = (strncmp(buf, "Charging", 8) == 0) ? '+' : '-';
 	/* capacity / current */
-	f_ = fopen(BATT "energy_full", "r");
-	if (f_ == NULL) {
+	f = fopen(BATT "energy_full", "r");
+	if (f == NULL) {
 		return 0;
 	}
-	fscanf(f_, "%u", &full);
-	fclose(f_);
-	f_ = fopen(BATT "energy_now", "r");
-	if (f_ == NULL) {
+	fscanf(f, "%u", &full);
+	fclose(f);
+	f = fopen(BATT "energy_now", "r");
+	if (f == NULL) {
 		return 0;
 	}
-	fscanf(f_, "%u", &now);
-	fclose(f_);
+	fscanf(f, "%u", &now);
+	fclose(f);
 	return sprintf(st, "%d%c", now * 100 / full, charge);
 
 no_batt:
@@ -74,86 +97,206 @@ no_batt:
 static int get_mem(char *st)
 {
 	unsigned int total, free, buffers, cached;
+	FILE *f;
 
-	f_ = fopen("/proc/meminfo", "r");
-	if (f_ == NULL) {
+	f = fopen("/proc/meminfo", "r");
+	if (f == NULL) {
 		return 0;
 	}
-	fscanf(f_, "%*s %u %*s\n"	/* memtotal */
+	fscanf(f, "%*s %u %*s\n"	/* memtotal */
 		"%*s %u %*s\n"		/* memfree  */
 		"%*s %u %*s\n"		/* buffers  */
 		"%*s %u %*s\n",		/* cached   */
 		&total, &free, &buffers, &cached);
-	fclose(f_);
+	fclose(f);
 	return sprintf(st, "%dM", (total - (free + buffers + cached)) / 1024);
 }
 
-#define CPU_CACHE_FILE		"/tmp/cpustat.wmfs"
-struct cpu_t {
-	unsigned int user;
-	unsigned int nice;
-	unsigned int sys;
-	unsigned int idle;
-};
-
-static int read_cpu(struct cpu_t *cpu, int cache)
+static int read_cpu(struct cpu_t *cpu)
 {
-	f_ = fopen(cache ? CPU_CACHE_FILE : "/proc/stat", "r");
-	if (f_ == NULL) {
+	unsigned int user, nice, sys, idle;
+	FILE *f;
+
+	f = fopen(CPU, "r");
+	if (f == NULL) {
 		return -1;
 	}
-	fscanf(f_, "%*s %u %u %u %u",
-		&cpu->user, &cpu->nice, &cpu->sys, &cpu->idle);
-	fclose(f_);
-	return 0;
-}
-
-static void save_cpu(struct cpu_t *cpu)
-{
-	f_ = fopen(CPU_CACHE_FILE, "w");
-	if (f_ == NULL) {
-		return;
+	if (fscanf(f, "%*s %u %u %u %u", &user, &nice, &sys, &idle) != 4) {
+		fclose(f);
+		return -1;
 	}
-	fprintf(f_, "cpu %u %u %u %u\n",
-		cpu->user, cpu->nice, cpu->sys, cpu->idle);
-	fclose(f_);
+	cpu->total = user + nice + sys + idle;
+	cpu->idle = idle;
+	fclose(f);
+	return 0;
 }
 
 static int get_cpu(char *st)
 {
-	struct cpu_t pcpu, cpu;
-	int load;
+	struct cpu_t cpu;
+	int total, idle, usage;
 
-	if (read_cpu(&pcpu, 1) < 0) {
-		read_cpu(&cpu, 0);
-		save_cpu(&cpu);
+	if (pcpu_.total == 0) {
+		read_cpu(&pcpu_);
 		return sprintf(st, "?%%");
 	}
-	read_cpu(&cpu, 0);
-	save_cpu(&cpu);
-
-	cpu.user += cpu.sys - (pcpu.user + pcpu.sys);
-	cpu.idle -= pcpu.idle;
-	load = cpu.user + cpu.idle;
-	if (load != 0) {
-		load = cpu.user * 100 / load;
-	} else {
-		load = 100;
+	if (read_cpu(&cpu) < 0) {
+		return sprintf(st, "?%%");
 	}
-	return sprintf(st, "%d%%", load);
+	total = cpu.total - pcpu_.total;
+	idle = cpu.idle - pcpu_.idle;
+	usage = 100 * (total - idle) / total;
+	pcpu_ = cpu;
+	return sprintf(st, "%d%%", usage);
+}
+
+/* Record pid to lockfile */
+static int lock_instance()
+{
+	int f;
+	char buf[16];
+	f = open(PATH_LOCK, O_RDWR | O_CREAT, 0644);
+	if (f < 0) {
+		perror("open");
+		return -1;
+	}
+	if (lockf(f, F_TLOCK, 0) < 0) {
+		close(f);
+		return 0;
+	}
+	snprintf(buf, sizeof(buf), "%d", getpid());
+	if (write(f, buf, strlen(buf)) < 0) {
+		perror("write");
+		close(f);
+		return -1;
+	}
+	return f;
+}
+
+static void daemonize(void)
+{
+	pid_t pid, sid;
+
+	if (getppid() == 1) {		/* Already a daemon */
+		return;
+	}
+	pid = fork();			/* Fork off the parent process */
+	if (pid < 0) {
+		exit(1);
+	}
+	if (pid > 0) {
+		exit(0);		/* Exit the parent process */
+	}
+	/* At this point we are executing as the child process */
+	umask(0);			/* Change the file mode mask */
+	sid = setsid();			/* Create a new SID for the child process */
+	if (sid < 0) {
+		exit(1);
+	}
+	lock_fd_ = lock_instance();	/* Save pid */
+	if (lock_fd_ < 0) {
+		exit(1);
+	} else if (lock_fd_ == 0) {
+		exit(0);
+	}
+	/* Change the current working directory */
+	if (chdir("/") < 0) {
+		exit(1);
+	}
+	/* Redirect standard files to /dev/null */
+	freopen("/dev/null", "r", stdin);
+	freopen("/dev/null", "w", stdout);
+	freopen("/dev/null", "w", stderr);
+}
+
+static int set_status(const char *st)
+{
+	pid_t pid;
+
+	pid = fork();
+	if (pid < 0) {
+		return -1;
+	}
+	if (pid == 0) {			/* child process */
+		setsid();
+		if (execlp("wmfs", "wmfs", "-s", st, NULL) == -1) {
+					/* error */
+		}
+		exit(0);
+	}
+	return 0;
+}
+
+static void handle_sig(int sig)
+{
+	switch (sig) {
+	case SIGQUIT:
+		flags_ |= FLAG_EXIT;
+		break;
+	}
 }
 
 int main(int argc, char **argv)
 {
-	char *st = status_;
+	char *st;
 
-	st += get_cpu(st);
-	*st++ = '|';
-	st += get_mem(st);
-	*st++ = '|';
-	st += get_batt(st);
-	*st++ = '|';
-	st += get_time(st);
-	puts(status_);
+	{	/* signal handler */
+		struct sigaction act;
+		sigemptyset(&act.sa_mask);
+		act.sa_flags = 0;
+		act.sa_handler = SIG_IGN;
+		if (sigaction(SIGCHLD, &act, NULL) < 0) {
+			perror("sigchld");
+			return 1;
+		}
+		act.sa_handler = &handle_sig;
+		if (sigaction(SIGQUIT, &act, NULL) < 0) {
+			perror("sigint");
+			return 1;
+		}
+	}
+#if 0
+	{	/* parse arguments */
+		int opt;
+		while ((opt = getopt(argc, argv, "d")) != -1) {
+			switch (opt) {
+			case 'd':	/* daemon */
+				flags_ |= FLAG_DAEMON;
+				break;
+			}
+		}
+	}
+#endif
+	if (flags_ & FLAG_DAEMON) {
+		daemonize();
+	} else {
+		lock_fd_ = lock_instance();
+		if (lock_fd_ < 0) {
+			return 1;
+		} else if (lock_fd_ == 0) {
+			puts("Another instance is running.");
+			return 0;
+		}
+	}
+	for (;;) {
+		st = status_;
+		st += get_cpu(st);
+		*st++ = '|';
+		st += get_mem(st);
+		*st++ = '|';
+		st += get_batt(st);
+		*st++ = '|';
+		st += get_time(st);
+		set_status(status_);
+		if (flags_ & FLAG_EXIT) {
+			break;
+		} else {
+			sleep(INTERVAL);
+		}
+	}
+	if (lock_fd_ > 0) {
+		close(lock_fd_);
+		unlink(PATH_LOCK);
+	}
 	return 0;
 }
