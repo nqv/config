@@ -20,9 +20,6 @@ set backup " backups are nice
 set backupdir=/tmp " but they clog cwd 
 
 set wrap "wrap long line
-"set tabstop=4 "tabsize
-set shiftwidth=2
-"set softtabstop=4
 
 "set expandtab "Spaces instead of tabs
 set autoindent "Always set auto indenting on
@@ -57,8 +54,8 @@ set statusline=[%02n]\ %f%(\ [%M%R%H]%)\ %Y\ %{&fileformat}\ %{&fileencoding}\ %
 "let mapleader = "`" "default: \
 
 " explorer
-nnoremap <leader>d :NERDTree<CR>
-nnoremap <leader>D :NERDTreeClose<CR>
+"nnoremap <leader>d :NERDTree<CR>
+"nnoremap <leader>D :NERDTreeClose<CR>
 
 nnoremap <leader>t :tabnew<CR>
 
@@ -152,20 +149,20 @@ imap <F2>  <C-o>:w<CR>
 "map <F3>       :set number!<CR>:set number?<CR>
 "imap <F3> <C-o>:set number!<CR><C-o>:set number?<CR>
 
-map  <F7> <ESC>:NERDTreeToggle<CR>
-imap <F7> <C-o>:NERDTreeToggle<CR>
-
 map  <F8> <ESC>:TlistToggle<CR>
 imap <F8> <C-o>:TlistToggle<CR>
 nmap <C-F8> :!ctags -R --c-kinds=+p --c++-kinds=+p --fields=+iaS --extra=+q .<CR>
 
-" show tab
-map  <F11> <ESC>:set list!<CR>:set list?<CR>
-imap <F11> <C-o>:set list!<CR><C-o>:set list?<CR>
+map  <F9> <ESC>:NERDTreeToggle<CR>
+imap <F9> <C-o>:NERDTreeToggle<CR>
 
 " highlight all
 map  <F10> <ESC>:set hlsearch!<CR>:set hlsearch?<CR>
 imap <F10> <C-o>:set hlsearch!<CR><C-o>:set hlsearch?<CR>
+
+" show tab
+map  <F11> <ESC>:set list!<CR>:set list?<CR>
+imap <F11> <C-o>:set list!<CR><C-o>:set list?<CR>
 
 " turn spelling on (VIM 7.0+)
 map  <F12> <ESC>:setlocal spell! spelllang=en_us<CR>
@@ -199,18 +196,31 @@ set backspace=start,eol,indent
 
 "switch to directory of current file
 command! CD cd %:p:h
+" my own coding style (C) 
+command! CSC set expandtab tabstop=4
+
+" insert current date
+command! InsDate r !date "+\%F"
+command! InsDateTime r !date "+\%F \%R:\%S"
 
 " select all
-noremap <C-a> ggVG
-inoremap <C-a> <ESC>ggVG
+"noremap <C-a> ggVG
+"inoremap <C-a> <ESC>ggVG
 
 " write sudo
 command! W w !sudo tee % > /dev/null
 
-command DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis | wincmd p | diffthis
+command! DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis | wincmd p | diffthis
 
 " ctags
 set tags=./tags;
+nmap <C-\> <C-W><C-]><C-w>T
+
+" tab/indent by file types
+set tabstop=4
+set shiftwidth=4
+autocmd Filetype {c,h}   setlocal expandtab
+"autocmd Filetype h   setlocal expandtab
 
 " DoxygenToolkit
 let g:DoxygenToolkit_authorName="vietnq"
@@ -227,7 +237,7 @@ set completeopt=longest,menuone " show preview of function prototype
 " Latex Suite
 " win32 users will need to have 'shellslash' set so that latex
 " can be called correctly.
-set shellslash
+"set shellslash
 
 " grep will sometimes skip displaying the file name if you
 " search in a singe file. This will confuse Latex-Suite. Set your grep
