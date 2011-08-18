@@ -1,5 +1,7 @@
 /*
  * Display system status.
+ * To quit deamon process:
+ *   $ kill -3 `cat /tmp/wmfs-st.lock`
  *
  * Author: Nguyen Quoc Viet <afelion@gmail.com>
  * License: Free
@@ -14,9 +16,11 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 
-#define INTERVAL		7
+#define INTERVAL		10
 #define BATT			"/sys/class/power_supply/BAT0/"
 #define CPU			"/proc/stat"
+#define NET_RX			"/sys/class/net/%s/statistics/rx_bytes"
+#define NET_TX			"/sys/class/net/%s/statistics/tx_bytes"
 #define PATH_LOCK    		"/tmp/wmfs-st.lock"
 #define FLAG_EXIT		(1 << 0)
 #define FLAG_DAEMON		(1 << 1)
@@ -24,6 +28,17 @@
 struct cpu_t {
 	unsigned int total;
 	unsigned int idle;
+};
+
+struct net_t {
+	unsigned long rx;
+	unsigned long tx;
+};
+
+const const char *NET[] = {
+	"eth0",
+	"wlan0",
+	NULL,
 };
 
 static char status_[128];
@@ -138,7 +153,7 @@ static int get_cpu(char *st)
 
 	if (pcpu_.total == 0) {
 		read_cpu(&pcpu_);
-		return sprintf(st, "?%%");
+		return sprintf(st, "0%%");
 	}
 	if (read_cpu(&cpu) < 0) {
 		return sprintf(st, "?%%");
@@ -148,6 +163,46 @@ static int get_cpu(char *st)
 	usage = 100 * (total - idle) / total;
 	pcpu_ = cpu;
 	return sprintf(st, "%d%%", usage);
+}
+
+static int read_net(const char *iface, struct net_t *net)
+{
+	FILE *f;
+	char path[64];
+	
+	/* rx */
+	snprintf(path, sizeof(path), NET_RX, iface);
+	f = fopen(path, "r");
+	if (f == NULL) {
+		return -1;
+	}
+	fscanf(f, "%lu", &(net->rx));
+	fclose(f);
+	/* tx */
+	snprintf(path, sizeof(path), NET_TX, iface);
+	f = fopen(path, "r");
+	if (f == NULL) {
+		return -2;
+	}
+	fscanf(f, "%lu", &(net->tx));
+	fclose(f);
+	return 0;
+}
+
+static int get_net(char *st)
+{
+	struct net_t net, total;
+	int i;
+
+	total.rx = 0;
+	total.tx = 0;
+	for (i = 0; NET[i] != NULL; ++i) {
+		if (read_net(NET[i], &net) == 0) {
+			total.rx += net.rx;
+			total.tx += net.tx;
+		}
+	}
+	return sprintf(st, "%luD %luU", total.rx / 1024, total.tx / 1024);
 }
 
 /* Record pid to lockfile */
@@ -283,6 +338,8 @@ int main(int argc, char **argv)
 		st += get_cpu(st);
 		*st++ = '|';
 		st += get_mem(st);
+		*st++ = '|';
+		st += get_net(st);
 		*st++ = '|';
 		st += get_batt(st);
 		*st++ = '|';
