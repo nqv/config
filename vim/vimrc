@@ -36,7 +36,7 @@ set incsearch "do incremental searches
 "set textwidth=80
 
 "set list "Show tab characters
-set listchars=tab:>`
+set listchars=tab:>`,trail:^,nbsp:~
 
 set showmatch
 set showmode
@@ -203,6 +203,9 @@ command! CSC set expandtab tabstop=4
 command! InsDate r !date "+\%F"
 command! InsDateTime r !date "+\%F \%R:\%S"
 
+command! RemTrSp %s/\s\+$//e
+command! HexMode %!xxd
+
 " select all
 "noremap <C-a> ggVG
 "inoremap <C-a> <ESC>ggVG
@@ -217,9 +220,9 @@ set tags=./tags;
 nmap <C-\> <C-W><C-]><C-w>T
 
 " tab/indent by file types
-set tabstop=4
-set shiftwidth=4
-autocmd Filetype {c,h}   setlocal expandtab
+"set tabstop=4
+"set shiftwidth=4
+"autocmd Filetype {c,h}   setlocal expandtab
 "autocmd Filetype h   setlocal expandtab
 
 " DoxygenToolkit
