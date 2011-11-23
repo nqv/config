@@ -12,19 +12,19 @@
 set $mod Mod4
 
 # font for window titles. ISO 10646 = Unicode
-font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
+font -*-fixed-medium-r-normal-*-13-*-*-*-*-*-iso10646-*
 
 # class color           border  backgr  text
-client.focused          #000000 #003366 #CCCCCC
-client.focused_inactive #000000 #333333 #888888
-client.unfocused        #000000 #111111 #666666
-client.urgent           #000000 #663300 #CCCCCC
+client.focused          #000000 #002244 #CCCCCC
+client.focused_inactive #000000 #444444 #888888
+client.unfocused        #000000 #222222 #666666
+client.urgent           #000000 #442200 #CCCCCC
 
 # start a terminal
 bindsym $mod+Ctrl+Return exec x-terminal-emulator
 
 # Shortcuts
-bindsym $mod+Ctrl+w exec jumanji
+bindsym $mod+Ctrl+w exec x-www-browser
 bindsym $mod+Ctrl+m exec pidgin
 bindsym $mod+Ctrl+i exec ibus-daemon
 
@@ -38,11 +38,12 @@ for_window [class="Gimp"] floating enable
 for_window [class="MPlayer"] floating enable
 for_window [class="Pidgin"] floating enable
 for_window [class="Skype"] floating enable
-assign "Jumanji" 5
-assign "Iceweasel" 6
-assign "VirtualBox" 7
-assign "Pidgin" 9
-assign "Skype" 9
+assign [class="Jumanji"] 5
+assign [class="X-www-browser"] 5
+assign [class="Iceweasel"] 6
+assign [class="VirtualBox"] 7
+assign [class="Pidgin"] 9
+assign [class="Skype"] 9
 
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
@@ -139,11 +140,11 @@ bindsym $mod+Ctrl+Shift+E exit
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
-        # These bindings trigger as soon as you enter the resize mode
+# These bindings trigger as soon as you enter the resize mode
 
-        # They resize the border in the direction you pressed, e.g.
-        # when pressing left, the window is resized so that it has
-        # more space on its left
+# They resize the border in the direction you pressed, e.g.
+# when pressing left, the window is resized so that it has
+# more space on its left
 
 bindsym j resize shrink left 10 px or 10 ppt
 bindsym Shift+J resize grow   left 10 px or 10 ppt
@@ -157,7 +158,7 @@ bindsym Shift+L resize grow   up 10 px or 10 ppt
 bindsym semicolon resize shrink right 10 px or 10 ppt
 bindsym Shift+colon resize grow   right 10 px or 10 ppt
 
-        # same bindings, but for the arrow keys
+# same bindings, but for the arrow keys
 bindsym Left resize shrink left 10 px or 10 ppt
 bindsym Shift+Left resize grow   left 10 px or 10 ppt
 
@@ -170,7 +171,7 @@ bindsym Shift+Up resize grow   up 10 px or 10 ppt
 bindsym Right resize shrink right 10 px or 10 ppt
 bindsym Shift+Right resize grow   right 10 px or 10 ppt
 
-        # back to normal: Enter or Escape
+# back to normal: Enter or Escape
 bindsym Return mode "default"
 bindsym Escape mode "default"
 }
@@ -179,4 +180,15 @@ bindsym $mod+r mode "resize"
 
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
-exec ~/afelion-status | i3bar -d
+bar {
+status_command ~/afelion-status
+font -*-fixed-medium-r-normal-*-13-*-*-*-*-*-iso10646-*
+colors {
+  background #000000
+  statusline #999999
+  focused_workspace  #CCCCCC #002244
+  active_workspace   #888888 #444444
+  inactive_workspace #666666 #222222
+  urgent_workspace   #CCCCCC #442200
+}
+}
