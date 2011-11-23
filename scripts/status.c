@@ -26,7 +26,6 @@
 
 #define INTERVAL		10
 #define BATT			"/sys/class/power_supply/BAT0/"
-#define CPU			"/proc/stat"
 #define NET_RX			"/sys/class/net/%s/statistics/rx_bytes"
 #define NET_TX			"/sys/class/net/%s/statistics/tx_bytes"
 #define PATH_LOCK		"/tmp/st-%s.afelion"
@@ -153,17 +152,17 @@ static int read_cpu(struct cpu_t *cpu)
 	unsigned int user, nice, sys, idle;
 	FILE *f;
 
-	f = fopen(CPU, "r");
+	f = fopen("/proc/stat", "r");
 	if (f == NULL) {
 		return -1;
 	}
-	if (fscanf(f, "%*s %u %u %u %u", &user, &nice, &sys, &idle) != 4) {
+	if (fscanf(f, "cpu %u %u %u %u", &user, &nice, &sys, &idle) != 4) {
 		fclose(f);
 		return -1;
 	}
+	fclose(f);
 	cpu->total = user + nice + sys + idle;
 	cpu->idle = idle;
-	fclose(f);
 	return 0;
 }
 
