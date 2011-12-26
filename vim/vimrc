@@ -203,7 +203,9 @@ command! CSC set expandtab tabstop=4
 command! InsDate r !date "+\%F"
 command! InsDateTime r !date "+\%F \%R:\%S"
 
+" Remove trailing spaces
 command! RemTrSp %s/\s\+$//e
+" Hex mode
 command! HexMode %!xxd
 
 " select all
@@ -254,6 +256,9 @@ let g:Tex_SmartKeyQuote=0
 let g:Tex_SmartKeyDot=0
 let g:Tex_AutoFolding=0
 
+" NERDTree
+let g:NERDTreeWinSize=24
+
 if has('gui_running')
   set guioptions=gmr
 
@@ -261,5 +266,3 @@ if has('gui_running')
   "set guifont=Monospace\ 9
   "set guifont=Bitstream\ Vera\ Sans\ Mono\ 11
 endif
-
-
