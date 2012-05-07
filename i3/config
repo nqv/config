@@ -14,11 +14,11 @@ set $mod Mod4
 # font for window titles. ISO 10646 = Unicode
 font -*-fixed-medium-r-normal-*-13-*-*-*-*-*-iso10646-*
 
-# class color           border  backgr  text
-client.focused          #000000 #002244 #CCCCCC
-client.focused_inactive #000000 #444444 #888888
-client.unfocused        #000000 #222222 #666666
-client.urgent           #000000 #442200 #CCCCCC
+# class color           border  backgr  text    indicator
+client.focused          #000000 #002244 #CCCCCC #442200
+client.focused_inactive #000000 #444444 #888888 #442200
+client.unfocused        #000000 #222222 #666666 #442200
+client.urgent           #000000 #442200 #CCCCCC #442200
 
 # start a terminal
 bindsym $mod+Ctrl+Return exec x-terminal-emulator
@@ -38,9 +38,8 @@ for_window [class="Gimp"] floating enable
 for_window [class="MPlayer"] floating enable
 for_window [class="Pidgin"] floating enable
 for_window [class="Skype"] floating enable
-assign [class="Jumanji"] 5
 assign [class="X-www-browser"] 5
-assign [class="Iceweasel"] 6
+assign [class="Iceweasel"] 5
 assign [class="VirtualBox"] 7
 assign [class="Pidgin"] 9
 assign [class="Skype"] 9
@@ -181,14 +180,14 @@ bindsym $mod+r mode "resize"
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
 bar {
-status_command ~/afelion-status
-font -*-fixed-medium-r-normal-*-13-*-*-*-*-*-iso10646-*
-colors {
-  background #000000
-  statusline #999999
-  focused_workspace  #CCCCCC #002244
-  active_workspace   #888888 #444444
-  inactive_workspace #666666 #222222
-  urgent_workspace   #CCCCCC #442200
-}
+	status_command ~/i3wm-status
+	font -*-fixed-medium-r-normal-*-13-*-*-*-*-*-iso10646-*
+	colors {
+		background #000000
+		statusline #999999
+		focused_workspace  #002244 #002244 #CCCCCC 
+		active_workspace   #444444 #444444 #888888 
+		inactive_workspace #222222 #222222 #666666 
+		urgent_workspace   #442200 #442200 #CCCCCC 
+	}
 }
