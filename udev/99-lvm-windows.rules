@@ -1,0 +1,3 @@
+# Set permission for lv disk
+# Copy into /etc/udev/rules.d/
+SUBSYSTEM=="block",KERNEL=="dm-*",ACTION=="add|change",ENV{DM_NAME}=="vg0-windows",OWNER="vietnq"
