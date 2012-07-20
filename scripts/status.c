@@ -52,6 +52,7 @@ struct cpu_t {
 struct net_t {
 	unsigned long rx;
 	unsigned long tx;
+	time_t tm;
 };
 
 const const char *NET[] = {
@@ -193,18 +194,16 @@ static int read_net(const char *iface, struct net_t *net)
 	/* rx */
 	snprintf(path, sizeof(path), NET_RX, iface);
 	f = fopen(path, "r");
-	if (f == NULL) {
+	if (f == NULL || fscanf(f, "%lu", &(net->rx)) != 1) {
 		return -1;
 	}
-	fscanf(f, "%lu", &(net->rx));
 	fclose(f);
 	/* tx */
 	snprintf(path, sizeof(path), NET_TX, iface);
 	f = fopen(path, "r");
-	if (f == NULL) {
-		return -2;
+	if (f == NULL || fscanf(f, "%lu", &(net->tx)) != 1) {
+		return -1;
 	}
-	fscanf(f, "%lu", &(net->tx));
 	fclose(f);
 	return 0;
 }
@@ -222,8 +221,12 @@ static int get_net(char *st)
 			total.tx += net.tx;
 		}
 	}
-	i = sprintf(st, "%4luD%4luU", (total.rx - pnet_.rx) / 1024,
-		(total.tx - pnet_.tx) / 1024);
+	/* calculate time elapsed */
+	time(&total.tm);
+	net.tm = total.tm - pnet_.tm;
+
+	i = sprintf(st, "%3luD %2luU", (total.rx - pnet_.rx) / 1024 / net.tm,
+		(total.tx - pnet_.tx) / 1024 / net.tm);
 	pnet_ = total;
 	return i;
 }
