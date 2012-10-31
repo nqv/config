@@ -261,8 +261,5 @@ let g:NERDTreeWinSize=24
 
 if has('gui_running')
   set guioptions=gmr
-
-  set guifont=Dina\ 11
-  "set guifont=Monospace\ 9
-  "set guifont=Bitstream\ Vera\ Sans\ Mono\ 11
+  set guifont=Monospace\ 9
 endif
