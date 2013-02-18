@@ -11,7 +11,7 @@
  * + To quit deamon process:
  *   $ kill -3 `cat /tmp/st-$USER.afelion`
  *
- * Author: Nguyen Quoc Viet <afelion@gmail.com>
+ * Author: Quoc-Viet Nguyen <afelion@gmail.com>
  * License: Free
  */
 
@@ -26,6 +26,14 @@
 
 #define INTERVAL		10
 #define BATT			"/sys/class/power_supply/BAT0/"
+#if 1
+# define BATT_FULL		"energy_full"
+# define BATT_NOW		"energy_now"
+#else
+# define BATT_FULL		"charge_full"
+# define BATT_NOW		"charge_now"
+#endif
+
 #define NET_RX			"/sys/class/net/%s/statistics/rx_bytes"
 #define NET_TX			"/sys/class/net/%s/statistics/tx_bytes"
 #define PATH_LOCK		"/tmp/st-%s.afelion"
@@ -112,15 +120,18 @@ static int get_batt(char *st)
 	}
 	charge = (strncmp(buf, "Charging", 8) == 0) ? '+' : '-';
 	/* capacity / current */
-	f = fopen(BATT "energy_full", "r");
+	f = fopen(BATT BATT_FULL, "r");
 	if (f == NULL) {
-		return 0;
+		goto no_batt;
 	}
 	fscanf(f, "%u", &full);
 	fclose(f);
-	f = fopen(BATT "energy_now", "r");
+	if (full == 0) {
+		goto no_batt;
+	}
+	f = fopen(BATT BATT_NOW, "r");
 	if (f == NULL) {
-		return 0;
+		goto no_batt;
 	}
 	fscanf(f, "%u", &now);
 	fclose(f);
