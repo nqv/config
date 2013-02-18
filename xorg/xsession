@@ -1,0 +1,6 @@
+#!/bin/sh
+
+syndaemon -t -k -i 2 -d &
+xautolock -time 45 -locker "sudo pm-suspend" &
+
+exec /etc/alternatives/x-window-manager
