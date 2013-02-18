@@ -21,23 +21,23 @@ to_ogg() {
 }
 
 # output audiodump.wav
-from_wma() {
+to_wav() {
   mplayer -vo null -vc dummy -af resample=44100 -ao pcm:waveheader "$1"
-}
-
-wma_mp3() {
-  from_wma "$1" && to_mp3 "$MFILE" "$2"
-  rm "$MFILE"
-}
-
-wma_ogg() {
-  from_wma "$1" && to_ogg "$MFILE" "$2"
-  rm "$MFILE"
 }
 
 mp3_mp3() {
   to_mp3 "$1" "$2"
   id3cp "$1" "$2"
+}
+
+any_mp3() {
+  to_wav "$1" && to_mp3 "$MFILE" "$2"
+  rm "$MFILE"
+}
+
+any_ogg() {
+  to_wav "$1" && to_ogg "$MFILE" "$2"
+  rm "$MFILE"
 }
 
 usage() {
@@ -74,8 +74,12 @@ while [ "$1" ]; do
 
     CONV_CMD="${IN_FORMAT}_${OUT_FORMAT}"
     if ! type "$CONV_CMD" > /dev/null ; then
-      echo "$IN_FORMAT to $OUT_FORMAT is not supported"
-      exit 2
+      echo "Using mplayer to transcode."
+      CONV_CMD="any_${OUT_FORMAT}"
+      if ! type "$CONV_CMD" > /dev/null ; then
+        echo "$IN_FORMAT to $OUT_FORMAT is not supported."
+	exit 2
+      fi
     fi
     OUT_FILE="$OUT_DIR/${IN_FILE%.*}.$OUT_FORMAT"
 
