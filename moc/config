@@ -1,0 +1,19 @@
+# Default FormatString:
+# %n - Track number
+# %a - Artist
+# %A - Album
+# %t - Title
+# %(X:TRUE:FALSE) - ternary expression - if X exists, do TRUE, otherwise
+#                   FALSE. '\' - escape character (must be double, because of
+#                   config interpreter). man zshmisc for more info.
+FormatString = "%(a:%a - :)%(t:%t:)%(n: - %n:)%(A: / %A:)"
+
+# Sound driver - OSS, ALSA, JACK, SNDIO (on OpenBSD) or null (only for
+# debugging).
+# You can enter more than one driver as a colon-separated list.  The first
+# working driver will be used.
+SoundDriver = ALSA:JACK:OSS
+
+# Theme file. This can be absolute path or relative to
+# /usr/share/moc/themes/ (depends on installation prefix) or ~/.moc/themes/
+Theme = darkdot_theme
