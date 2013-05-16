@@ -1,47 +1,25 @@
-! XTerm*faceName: bitstream vera sans mono
-! XTerm*faceSize: 11
-XTerm*font:  -*-terminus-*-*-*-*-*-*-*-*-*-*-*-*
+! Default font
+UXTerm*font:  -*-terminus-*-*-*-*-*-*-*-*-*-*-*-*
 ! Unreadable
-!XTerm*VT100*font1: -*-fixed-medium-*-*-*-8-*-*-*-*-*-*-*
+UXTerm*font1: -*-fixed-medium-r-*-*-6-*-*-*-*-*-*-*
 ! Tiny
-!XTerm*VT100*font2: -*-fixed-medium-*-*-*-8-*-*-*-*-*-*-*
-XTerm*VT100*font2: 5x8
+UXTerm*font2: -*-fixed-medium-r-*-*-8-*-*-*-*-*-*-*
 ! Small
-!XTerm*VT100*font3: -*-fixed-medium-r-*-*-12-*-*-*-*-*-*-*
-XTerm*VT100*font3: 6x12
+UXTerm*font3: -*-fixed-medium-r-*-*-10-*-*-*-*-*-*-*
 ! Medium
-!XTerm*VT100*font4: -*-fixed-medium-*-*-*-14-*-*-*-*-*-*-*
-XTerm*VT100*font4: fixed
+UXTerm*font4: -*-fixed-medium-r-*-*-14-*-*-*-*-*-*-*
 ! Large
-!XTerm*VT100*font5: -*-fixed-medium-*-*-*-15-*-*-*-*-*-*-*
-XTerm*VT100*font5: 9x15
+UXTerm*font5: -*-fixed-medium-r-*-*-18-*-*-*-*-*-*-*
 ! Huge
-!XTerm*VT100*font6: -*-fixed-medium-*-*-*-20-*-*-*-*-*-*-*
-XTerm*VT100*font6: 10x20
+UXTerm*font6: -*-fixed-medium-r-*-*-20-*-*-*-*-*-*-*
 
-! XTerm*font: fixed
-XTerm*background: black
-XTerm*foreground: lightgray
+UXTerm*background: black
+UXTerm*foreground: lightgray
 
-! XTerm*ScrollBar: true
-! XTerm*rightScrollBar: true
+UXTerm*SimpleMenu*background: rgb:20/20/20 
+UXTerm*SimpleMenu*foreground: gray
 
-! XTerm*scrollbar.thumb: vline
-! XTerm*scrollbar.width: 4 
-! XTerm*scrollbar.background: black
-! XTerm*scrollbar.foreground: rgb:20/20/20
+UXTerm*printerCommand: cat > /tmp/xterm-dump
 
-! XTerm*SimpleMenu*menuLabel.font: fixed
-XTerm*mainMenu*background: rgb:20/20/20 
-XTerm*mainMenu*foreground: gray
-
-XTerm*SimpleMenu*background: rgb:20/20/20
-XTerm*SimpleMenu*foreground: gray
-
-XTerm*printerCommand: cat > /tmp/xterm-dump
-
-Xterm*scrollLines: 1024
-XTerm*saveLines: 1024
-
-XTerm*metaSendsEscape: true
-
+UXTerm*metaSendsEscape: true
+UXTerm*visualBell: false
