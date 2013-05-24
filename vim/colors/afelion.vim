@@ -1,5 +1,5 @@
-" Vim color file
-" Author: VietNQ
+" Vim color
+" Author: Quoc-Viet Nguyen
 
 " First remove all existing highlighting.
 set background=dark
@@ -30,6 +30,7 @@ hi LineNr term=underline ctermbg=Gray ctermfg=DarkBlue guifg=Gray30 guibg=Gray10
 "Visual	term=reverse cterm=reverse gui=reverse
 "WarningMsg  term=standout ctermfg=Red guifg=Red
 "Cursor	guibg=Green
+hi ColorColumn ctermbg=DarkBlue ctermfg=LightGray guibg=Gray4
 
 "hi StatusLine ctermbg=Black ctermfg=White guibg=#4c4c4c guifg=fg gui=bold
 "hi StatusLineNC ctermbg=Black ctermfg=Gray guibg=#404040 guifg=fg gui=none
