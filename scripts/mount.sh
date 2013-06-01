@@ -1,17 +1,32 @@
 #!/bin/sh
 
-MYUID=`id -u`
-MYGID=`id -g`
-
-if [ "$#" -lt "2" ] ; then
-  echo "$0 <device> <dir>"
+# Required an argument
+if [ $# -lt 1 ]; then
+  echo "$0 DEVICE [MOUNTDIR]"
   exit 0
 fi
 
-CMD="mount"
-if [ "$UID" != "0" ] ; then
-  CMD="sudo $CMD"
+# Current user
+MYUID=`id -u`
+MYGID=`id -g`
+
+SRC="$1"
+TRG="$2"
+
+if [ "$MYUID" = "0" ]; then
+  SUDO=""
+else
+  SUDO="sudo"
 fi
 
-$CMD -o uid=$MYUID,gid=$MYGID "$1" "$2"
+if [ -z "$TRG" ]; then
+  # Create mount point in /media
+  NAME=`basename "$SRC"`
+  TRG="/media/$NAME"
+  if [ ! -d "$TRG" ]; then
+    $SUDO mkdir "$TRG"
+  fi
+fi
+
+$SUDO mount -o uid=$MYUID,gid=$MYGID "$SRC" "$TRG"
 
