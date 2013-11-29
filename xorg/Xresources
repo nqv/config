@@ -23,3 +23,7 @@ UXTerm*printerCommand: cat > /tmp/xterm-dump
 
 UXTerm*metaSendsEscape: true
 UXTerm*visualBell: false
+
+URxvt.background: black
+URxvt.foreground: lightgray
+URxvt.scrollBar: false
