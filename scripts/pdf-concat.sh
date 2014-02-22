@@ -9,6 +9,6 @@ PAPER_SIZE=a4
 shift 1
 
 gs -sDEVICE=pdfwrite -sPAPERSIZE="$PAPERSIZE"\
-	-dNOPAUSE -dBATCH -dSAFER \
+	-dNOPAUSE -dBATCH -dSAFER -dPDFSETTINGS=/prepress \
 	-sOutputFile="$OUTPUT_FILE" \
 	"$@"

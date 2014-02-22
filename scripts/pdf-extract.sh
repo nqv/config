@@ -15,7 +15,8 @@ if [ -z "$LAST_PAGE" ]; then
 	LAST_PAGE="$FIRST_PAGE"
 fi
 
-gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -dSAFER \
+gs -sDEVICE=pdfwrite \
+	-dNOPAUSE -dBATCH -dSAFER -dPDFSETTINGS=/prepress \
 	-dFirstPage="$FIRST_PAGE" \
 	-dLastPage="$LAST_PAGE" \
 	-sOutputFile="${1%.pdf}_p${FIRST_PAGE}-p${LAST_PAGE}.pdf" \
