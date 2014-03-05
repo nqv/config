@@ -24,6 +24,9 @@ UXTerm*printerCommand: cat > /tmp/xterm-dump
 UXTerm*metaSendsEscape: true
 UXTerm*visualBell: false
 
+URxvt.font: -*-fixed-medium-r-*-*-13-*-*-*-*-*-iso10646-*
+URxvt.boldFont: -*-fixed-bold-r-*-*-13-*-*-*-*-*-iso10646-*
+URxvt.italicFont: -*-fixed-medium-o-*-*-13-*-*-*-*-*-iso10646-*
 URxvt.background: black
 URxvt.foreground: lightgray
 URxvt.scrollBar: false
