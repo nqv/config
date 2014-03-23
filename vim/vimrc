@@ -1,4 +1,5 @@
-"" vietnq
+" Vim settings
+" Quoc-Viet Nguyen <afelion@gmail.com>
 syntax on
 filetype on
 filetype plugin on
@@ -262,4 +263,5 @@ let g:NERDTreeWinSize=24
 if has('gui_running')
   set guioptions=gmr
   set guifont=Monospace\ 9
+  set colorcolumn=80
 endif
