@@ -64,15 +64,21 @@ nnoremap <leader>t :tabnew<CR>
 "nnoremap <leader>f :TlistOpen<CR>
 "nnoremap <leader>F :TlistClose<CR>
 
+" Move lines
+nnoremap <C-S-Up>    :m .-2<CR>
+inoremap <C-S-Up>    <C-o>:m .-2<CR>
+nnoremap <C-S-Down>  :m .+1<CR>
+inoremap <C-S-Down>  <C-o>:m .+1<CR>
+
 " win navigate
-noremap  <C-S-Up>    <C-w>k
-inoremap <C-S-Up>    <C-o><C-w>k
-noremap  <C-S-Down>  <C-w>j
-inoremap <C-S-Down>  <C-o><C-w>j
-noremap  <C-S-Left>  <C-w>h
-inoremap <C-S-Left>  <C-o><C-w>h
-noremap  <C-S-Right> <C-w>l
-inoremap <C-S-Right> <C-o><C-w>l
+noremap  <A-Up>    <C-w>k
+inoremap <A-Up>    <C-o><C-w>k
+noremap  <A-Down>  <C-w>j
+inoremap <A-Down>  <C-o><C-w>j
+noremap  <A-Left>  <C-w>h
+inoremap <A-Left>  <C-o><C-w>h
+noremap  <A-Right> <C-w>l
+inoremap <A-Right> <C-o><C-w>l
 
 " backup normal moving
 noremap  <C-Up> gk
@@ -86,24 +92,24 @@ inoremap <C-Tab> <C-o>gt
 noremap  <C-S-Tab> gT
 inoremap <C-S-Tab> <C-o>gT
 
-noremap  <C-1> 1gt
-inoremap <C-1> <C-o>1gt
-noremap  <C-2> 2gt
-inoremap <C-2> <C-o>2gt
-noremap  <C-3> 3gt
-inoremap <C-3> <C-o>3gt
-noremap  <C-4> 4gt
-inoremap <C-4> <C-o>4gt
-noremap  <C-5> 5gt
-inoremap <C-5> <C-o>5gt
-noremap  <C-6> 6gt
-inoremap <C-6> <C-o>6gt
-noremap  <C-7> 7gt
-inoremap <C-7> <C-o>7gt
-noremap  <C-8> 8gt
-inoremap <C-8> <C-o>8gt
-noremap  <C-9> 9gt
-inoremap <C-9> <C-o>9gt
+noremap  <A-1> 1gt
+inoremap <A-1> <C-o>1gt
+noremap  <A-2> 2gt
+inoremap <A-2> <C-o>2gt
+noremap  <A-3> 3gt
+inoremap <A-3> <C-o>3gt
+noremap  <A-4> 4gt
+inoremap <A-4> <C-o>4gt
+noremap  <A-5> 5gt
+inoremap <A-5> <C-o>5gt
+noremap  <A-6> 6gt
+inoremap <A-6> <C-o>6gt
+noremap  <A-7> 7gt
+inoremap <A-7> <C-o>7gt
+noremap  <A-8> 8gt
+inoremap <A-8> <C-o>8gt
+noremap  <A-9> 9gt
+inoremap <A-9> <C-o>9gt
 
 " resize
 noremap <leader>+ <C-W>+
@@ -143,6 +149,10 @@ inoremap <C-p> <C-o>p
 
 " undo
 inoremap <C-u> <C-o>u
+
+" Disable F1
+map  <F1> <nop>
+imap <F1> <nop>
 
 " save
 map  <F2>  <ESC>:w<CR>
@@ -197,8 +207,10 @@ set backspace=start,eol,indent
 
 "switch to directory of current file
 command! CD cd %:p:h
-" my own coding style (C) 
-command! CSC set expandtab tabstop=4
+" Coding styles
+command! TSX echo 'ts:'&tabstop 'sts:'&softtabstop 'sw:'&shiftwidth 'et:'&expandtab
+command! TS4 set tabstop=4 softtabstop=4 shiftwidth=4 expandtab | TSX
+command! TS2 set tabstop=2 softtabstop=2 shiftwidth=2 expandtab | TSX
 
 " insert current date
 command! InsDate r !date "+\%F"
