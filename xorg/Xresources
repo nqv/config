@@ -24,9 +24,18 @@ UXTerm*printerCommand: cat > /tmp/xterm-dump
 UXTerm*metaSendsEscape: true
 UXTerm*visualBell: false
 
-URxvt.font: -*-fixed-medium-r-*-*-13-*-*-*-*-*-iso10646-*
-URxvt.boldFont: -*-fixed-bold-r-*-*-13-*-*-*-*-*-iso10646-*
-URxvt.italicFont: -*-fixed-medium-o-*-*-13-*-*-*-*-*-iso10646-*
+! Appearance
 URxvt.background: black
 URxvt.foreground: lightgray
-URxvt.scrollBar: false
+URxvt.scrollBar:  false
+URxvt.font:       -*-fixed-medium-r-*-*-13-*-*-*-*-*-iso10646-*
+URxvt.boldFont:   -*-fixed-bold-r-*-*-13-*-*-*-*-*-iso10646-*
+URxvt.italicFont: -*-fixed-medium-o-*-*-13-*-*-*-*-*-iso10646-*
+
+! Perl extensions (.urxvt/ext)
+URxvt.perl-ext-common: default,x-clipboard
+! Copy/paste from clipboard
+URxvt.keysym.C-C: perl:x-clipboard:copy
+URxvt.keysym.C-V: perl:x-clipboard:paste
+! Ctrl+Shift bindings to work
+URxvt.iso14755: false

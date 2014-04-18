@@ -1,0 +1,51 @@
+#! perl -w
+
+=head1 NAME
+
+x-clipboard - X11 clipboard support
+
+=head1 SYNOPSIS
+
+   urxvt -pe x-clipboard
+
+=head1 DESCRIPTION
+
+This extension implements commands to interact with the X11 clipboard and
+requires the C<xclip>. It is used like this:
+
+   URxvt.keysym.C-C: perl:x-clipboard:copy
+   URxvt.keysym.C-V: perl:x-clipboard:paste
+
+=cut
+
+sub copy {
+  my ($self) = @_;
+
+  open (my $pipe, '| /usr/bin/xclip -in -selection clipboard') or die;
+  print $pipe $self->selection;
+  close $pipe;
+
+  ()
+}
+
+sub paste {
+  my ($self) = @_;
+
+  my $content = `/usr/bin/xclip -loop 1 -out -selection clipboard`;
+  $self->tt_write ($content);
+
+  ()
+}
+
+sub on_user_command {
+  my ($self, $cmd) = @_;
+
+  if ($cmd eq "x-clipboard:copy") {
+    $self->copy;
+  } elsif ($cmd eq "x-clipboard:paste") {
+    $self->paste;
+  }
+
+  ()
+}
+
