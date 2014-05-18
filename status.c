@@ -23,6 +23,7 @@
 #include <signal.h>
 #include <fcntl.h>
 #include <sys/stat.h>
+#include <sys/sysinfo.h>
 
 #define INTERVAL		10
 #define BATT			"/sys/class/power_supply/BAT0/"
@@ -143,20 +144,13 @@ no_batt:
 
 static int get_mem(char *st)
 {
-	unsigned int total, free, buffers, cached;
-	FILE *f;
+	struct sysinfo info;
 
-	f = fopen("/proc/meminfo", "r");
-	if (f == NULL) {
-		return 0;
+   	if (sysinfo(&info) != 0) {
+        	return 0;
 	}
-	fscanf(f, "%*s %u %*s\n"	/* memtotal */
-		"%*s %u %*s\n"		/* memfree  */
-		"%*s %u %*s\n"		/* buffers  */
-		"%*s %u %*s\n",		/* cached   */
-		&total, &free, &buffers, &cached);
-	fclose(f);
-	return sprintf(st, "%dM", (total - (free + buffers + cached)) / 1024);
+	return sprintf(st, "%luM",
+		(info.totalram - info.freeram) / 1024 / 1024);
 }
 
 static int read_cpu(struct cpu_t *cpu)
