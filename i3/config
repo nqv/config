@@ -21,17 +21,17 @@ client.unfocused        #000000 #222222 #666666 #442200
 client.urgent           #000000 #442200 #CCCCCC #442200
 
 # start a terminal
-bindsym $mod+Ctrl+Return exec x-terminal-emulator
+bindsym $mod+Ctrl+Return exec --no-startup-id urxvt
 
-bindsym $mod+Ctrl+w exec x-www-browser
-bindsym $mod+Ctrl+l exec i3lock -c 000000
+bindsym $mod+Ctrl+w exec firefox
+bindsym $mod+Ctrl+l exec --no-startup-id i3lock -c 000000
 
 # start dmenu (a program launcher)
 bindsym $mod+d exec dmenu_run
 
-bindsym XF86AudioMute exec amixer sset Master toggle
-bindsym XF86AudioRaiseVolume exec amixer sset PCM 20+
-bindsym XF86AudioLowerVolume exec amixer sset PCM 20-
+bindsym XF86AudioMute        exec --no-startup-id amixer sset Master toggle
+bindsym XF86AudioRaiseVolume exec --no-startup-id amixer sset PCM 20+
+bindsym XF86AudioLowerVolume exec --no-startup-id amixer sset PCM 20-
 
 # rules
 for_window [class="MPlayer"] floating enable
