@@ -1,5 +1,7 @@
 " Vim settings
 " Quoc-Viet Nguyen <afelion@gmail.com>
+runtime bundle/vim-pathogen/autoload/pathogen.vim
+execute pathogen#infect()
 syntax on
 filetype on
 filetype plugin on
