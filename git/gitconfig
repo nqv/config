@@ -1,0 +1,7 @@
+[user]
+	name = Quoc-Viet Nguyen
+	email = afelion@gmail.com
+[core]
+	editor = vim
+[push]
+	default = simple
