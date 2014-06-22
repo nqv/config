@@ -1,29 +1,3 @@
-! Default font
-UXTerm*font:  -*-terminus-*-*-*-*-*-*-*-*-*-*-*-*
-! Unreadable
-UXTerm*font1: -*-fixed-medium-r-*-*-6-*-*-*-*-*-*-*
-! Tiny
-UXTerm*font2: -*-fixed-medium-r-*-*-8-*-*-*-*-*-*-*
-! Small
-UXTerm*font3: -*-fixed-medium-r-*-*-10-*-*-*-*-*-*-*
-! Medium
-UXTerm*font4: -*-fixed-medium-r-*-*-14-*-*-*-*-*-*-*
-! Large
-UXTerm*font5: -*-fixed-medium-r-*-*-18-*-*-*-*-*-*-*
-! Huge
-UXTerm*font6: -*-fixed-medium-r-*-*-20-*-*-*-*-*-*-*
-
-UXTerm*background: black
-UXTerm*foreground: lightgray
-
-UXTerm*SimpleMenu*background: rgb:20/20/20 
-UXTerm*SimpleMenu*foreground: gray
-
-UXTerm*printerCommand: cat > /tmp/xterm-dump
-
-UXTerm*metaSendsEscape: true
-UXTerm*visualBell: false
-
 ! Appearance
 URxvt.background: black
 URxvt.foreground: lightgray
@@ -32,10 +6,28 @@ URxvt.font:       -*-fixed-medium-r-*-*-13-*-*-*-*-*-iso10646-*
 URxvt.boldFont:   -*-fixed-bold-r-*-*-13-*-*-*-*-*-iso10646-*
 URxvt.italicFont: -*-fixed-medium-o-*-*-13-*-*-*-*-*-iso10646-*
 
-! Perl extensions (.urxvt/ext)
-URxvt.perl-ext-common: default,x-clipboard
-! Copy/paste from clipboard
-URxvt.keysym.C-C: perl:x-clipboard:copy
-URxvt.keysym.C-V: perl:x-clipboard:paste
 ! Ctrl+Shift bindings to work
 URxvt.iso14755: false
+URxvt.iso14755_52: false
+
+! Perl extensions (.urxvt/ext)
+!URxvt.perl-ext-common: default,matcher,font-size,x-clipboard
+URxvt.perl-ext-common: default,clipboard,url-select,keyboard-select,font-size
+
+! Open link in browser with Control-Click
+!URxvt.urlLauncher:     /usr/bin/firefox
+!URxvt.matcher.button:  C1
+
+URxvt.url-select.launcher:  firefox
+URxvt.url-select.underline: true
+
+URxvt.keysym.C-C: perl:clipboard:copy
+URxvt.keysym.C-V: perl:clipboard:paste
+URxvt.keysym.C-X: perl:clipboard:paste_escaped
+URxvt.keysym.C-U: perl:url-select:select_next
+URxvt.keysym.C-Escape: perl:keyboard-select:activate
+URxvt.keysym.C-slash: perl:keyboard-select:search
+
+! Change font size on Control-Plus/Minus
+URxvt.keysym.C-minus: perl:font-size:increase
+URxvt.keysym.C-equal: perl:font-size:decrease
