@@ -1,0 +1,1 @@
+SUBSYSTEM=="video4linux",BUS=="usb",ATTRS{vendor}=="0x0c45",ATTRS{device}=="0x641d",NAME="video0"
