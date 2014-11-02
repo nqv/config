@@ -3,8 +3,7 @@
 runtime bundle/vim-pathogen/autoload/pathogen.vim
 execute pathogen#infect()
 syntax on
-filetype on
-filetype plugin on
+filetype plugin indent on
 colorscheme afelion
 
 "enable use of mouse
@@ -65,6 +64,9 @@ nnoremap <leader>t :tabnew<CR>
 " Tag list
 "nnoremap <leader>f :TlistOpen<CR>
 "nnoremap <leader>F :TlistClose<CR>
+
+" Go
+au FileType go nmap <Leader>gd <Plug>(go-def-tab)
 
 " Move lines
 nnoremap <C-S-Up>    :m .-2<CR>
@@ -162,8 +164,8 @@ imap <F2>  <C-o>:w<CR>
 "map <F3>       :set number!<CR>:set number?<CR>
 "imap <F3> <C-o>:set number!<CR><C-o>:set number?<CR>
 
-map  <F8> <ESC>:TlistToggle<CR>
-imap <F8> <C-o>:TlistToggle<CR>
+map  <F8> <ESC>:TagbarToggle<CR>
+imap <F8> <C-o>:TagbarToggle<CR>
 nmap <C-F8> :!ctags -R --c-kinds=+p --c++-kinds=+p --fields=+iaS --extra=+q .<CR>
 
 map  <F9> <ESC>:NERDTreeToggle<CR>
