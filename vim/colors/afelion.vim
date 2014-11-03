@@ -57,22 +57,32 @@ hi DiffText term=reverse ctermfg=LightGray ctermbg=Red guifg=DarkRed guibg=DarkS
 "hi lCursor guifg=bg guibg=fg
 
 " Colors for syntax highlighting
-hi Comment ctermfg=DarkBlue guifg=DarkOliveGreen
-hi Constant ctermfg=DarkGreen guifg=DarkGoldenRod
-  hi Number ctermfg=DarkGreen guifg=RoyalBlue
-hi Special ctermfg=Brown guifg=DarkKhaki
-hi Identifier ctermfg=DarkCyan guifg=DarkCyan
-"  hi Function ctermfg=DarkRed guifg=RoyalBlue
+hi Comment cterm=none ctermfg=Blue guifg=DarkOliveGreen
+hi Constant ctermfg=DarkGreen guifg=RoyalBlue
+  hi String ctermfg=Green guifg=RoyalBlue
+  hi Character ctermfg=Green guifg=SteelBlue
+  hi Number ctermfg=Green guifg=DarkGoldenRod
+  hi Boolean cterm=bold ctermfg=Green gui=bold guifg=DarkKhaki
+  hi Float ctermfg=Green guifg=GoldenRod
+hi Special ctermfg=Yellow guifg=DarkKhaki
+hi Identifier ctermfg=Cyan guifg=Cyan
+  hi Function ctermfg=DarkCyan guifg=DarkCyan
 hi Statement ctermfg=White guifg=White
   hi Conditional ctermfg=Red guifg=Chocolate
-  hi Repeat ctermfg=Magenta guifg=IndianRed
-  hi Label ctermfg=Cyan guifg=Brown
-"  hi Operator term=bold ctermfg=Cyan gui=bold guifg=SeaGreen
-"  hi Keyword ctermfg=Blue guifg=Blue
+  hi Repeat ctermfg=Red guifg=IndianRed
+  hi Label ctermfg=Brown guifg=Brown
+  hi Operator ctermfg=Cyan guifg=SeaGreen
+  hi Keyword cterm=bold ctermfg=Cyan gui=bold guifg=DarkTurquoise
 hi PreProc ctermfg=DarkMagenta guifg=MediumPurple
-hi Type ctermfg=Green guifg=LimeGreen
-"  hi StorageClass ctermfg=Yellow guifg=Yellow
-hi Ignore ctermfg=7 guifg=bg
+  hi Include ctermfg=DarkMagenta guifg=Purple
+  hi Define ctermfg=Magenta guifg=MediumPurple
+  hi Macro ctermfg=Magenta guifg=MediumPurple
+  hi PreCondit ctermfg=Magenta guifg=Purple
+hi Type cterm=bold ctermfg=Green gui=none guifg=LimeGreen
+  hi Structure cterm=bold ctermfg=DarkGreen gui=bold guifg=ForestGreen
+  hi StorageClass cterm=bold ctermfg=DarkGreen gui=bold guifg=ForestGreen
+  hi Typedef cterm=bold ctermfg=DarkGreen gui=bold guifg=ForestGreen
+"hi Ignore ctermfg=7 guifg=bg
 hi Error term=reverse cterm=bold ctermfg=LightGray ctermbg=Red gui=bold guifg=White guibg=Red
 hi Todo term=standout cterm=bold ctermfg=LightBlue ctermbg=Black gui=bold guifg=Black guibg=Yellow
 "hi Underlined ctermbg=Black ctermfg=White guibg=bg guifg=#00a0ff gui=underline
