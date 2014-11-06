@@ -17,3 +17,4 @@ git_clone https://github.com/scrooloose/nerdtree
 git_clone https://github.com/scrooloose/nerdcommenter
 git_clone https://github.com/majutsushi/tagbar
 git_clone https://github.com/fatih/vim-go
+git_clone https://github.com/airblade/vim-gitgutter

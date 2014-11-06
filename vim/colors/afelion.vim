@@ -23,7 +23,7 @@ hi ErrorMsg term=standout ctermfg=LightGray ctermbg=Red guifg=White guibg=Red
 "Search	term=reverse ctermbg=Yellow guibg=Yellow
 "MoreMsg	term=bold cterm=bold ctermfg=Green gui=bold guifg=Green
 "ModeMsg	term=bold cterm=bold gui=bold
-hi LineNr term=underline ctermbg=Gray ctermfg=DarkBlue guifg=Gray30 guibg=Gray10
+hi LineNr term=underline ctermbg=DarkGray ctermfg=DarkBlue guifg=Gray30 guibg=Gray10
 "Question    term=standout cterm=bold ctermfg=Green gui=bold guifg=Green
 "StatusLine  term=reverse cterm=reverse gui=reverse
 "Title	term=bold cterm=bold ctermfg=Blue gui=bold guifg=Blue
@@ -86,6 +86,7 @@ hi Type cterm=bold ctermfg=Green gui=none guifg=LimeGreen
 hi Error term=reverse cterm=bold ctermfg=LightGray ctermbg=Red gui=bold guifg=White guibg=Red
 hi Todo term=standout cterm=bold ctermfg=LightBlue ctermbg=Black gui=bold guifg=Black guibg=Yellow
 "hi Underlined ctermbg=Black ctermfg=White guibg=bg guifg=#00a0ff gui=underline
+hi SignColumn ctermbg=DarkGray guibg=Gray10
 
 "*Comment	any comment
 "*Constant	any constant
