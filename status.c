@@ -83,7 +83,7 @@ static int get_time(char *str)
 
 	time(&raw);
 	info = localtime(&raw);
-	return strftime(str, 24, "%a %m-%d %H:%M", info);
+	return strftime(str, 24, "%a %d/%m %H:%M", info);
 }
 
 static int get_batt(char *st)
