@@ -1,11 +1,13 @@
 #!/bin/sh
 git_clone() {
-  repo=`basename $1`
+  url=$1
+  shift
+  repo=`basename $url`
   echo "Checking $repo..."
   if [ -d "$repo" ]; then
     (cd "$repo" && git pull)
   else
-    git clone --depth 1 $1
+    git clone --depth 1 $@ $url
   fi
 }
 
@@ -18,3 +20,4 @@ git_clone https://github.com/scrooloose/nerdcommenter
 git_clone https://github.com/majutsushi/tagbar
 git_clone https://github.com/fatih/vim-go
 git_clone https://github.com/airblade/vim-gitgutter
+git_clone https://github.com/davidhalter/jedi-vim --recursive 
