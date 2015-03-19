@@ -1,11 +1,16 @@
 #!/bin/bash
-SCRIPTDIR=$(dirname -- "$(readlink -f -- "$BASH_SOURCE[0]")")
-export GOROOT=~/tools/go
-export GOPATH=$SCRIPTDIR
-GOBIN=$GOROOT/bin
-if [ "$PATH" = "${PATH%$GOBIN*}" ]; then
-  export PATH=$PATH:$GOBIN
+export GOPATH=$(dirname -- "$(readlink -f -- "$BASH_SOURCE[0]")")
+if [ -z "$1" ]; then
+	export GOROOT="$HOME/tools/go"
+else
+	export GOROOT="$1"
 fi
+for P in "$GOPATH" "$GOROOT"; do
+	GOBIN="$P/bin"
+	if [[ ":$PATH:" != *":$GOBIN:"* ]]; then
+		export PATH="$GOBIN:$PATH"
+	fi
+done
 echo "GOROOT:" "$GOROOT"
 echo "GOPATH:" "$GOPATH"
 echo "PATH:  " "$PATH"
