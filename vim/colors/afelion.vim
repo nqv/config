@@ -62,26 +62,26 @@ hi Constant ctermfg=DarkGreen guifg=RoyalBlue
   hi String ctermfg=Green guifg=RoyalBlue
   hi Character ctermfg=Green guifg=SteelBlue
   hi Number ctermfg=Green guifg=DarkGoldenRod
-  hi Boolean cterm=bold ctermfg=Green gui=bold guifg=DarkKhaki
+  hi Boolean cterm=bold ctermfg=Green guifg=DarkKhaki
   hi Float ctermfg=Green guifg=GoldenRod
 hi Special ctermfg=Yellow guifg=DarkKhaki
-hi Identifier ctermfg=Cyan guifg=Cyan
-  hi Function ctermfg=DarkCyan guifg=DarkCyan
-hi Statement ctermfg=White guifg=White
+hi Identifier ctermfg=Cyan guifg=RosyBrown
+  hi Function ctermfg=Cyan guifg=RosyBrown
+hi Statement ctermfg=White gui=none guifg=MediumTurquoise
   hi Conditional ctermfg=Red guifg=Chocolate
   hi Repeat ctermfg=Red guifg=IndianRed
   hi Label ctermfg=Brown guifg=Brown
-  hi Operator ctermfg=Cyan guifg=SeaGreen
-  hi Keyword cterm=bold ctermfg=Cyan gui=bold guifg=DarkTurquoise
+  hi Operator ctermfg=Cyan guifg=MediumSeaGreen
+  hi Keyword cterm=bold ctermfg=Cyan guifg=MediumTurquoise
 hi PreProc ctermfg=DarkMagenta guifg=MediumPurple
-  hi Include ctermfg=DarkMagenta guifg=Purple
+  hi Include ctermfg=DarkMagenta guifg=MediumPurple
   hi Define ctermfg=Magenta guifg=MediumPurple
   hi Macro ctermfg=Magenta guifg=MediumPurple
-  hi PreCondit ctermfg=Magenta guifg=Purple
-hi Type cterm=bold ctermfg=Green gui=none guifg=LimeGreen
-  hi Structure cterm=bold ctermfg=DarkGreen gui=bold guifg=ForestGreen
-  hi StorageClass cterm=bold ctermfg=DarkGreen gui=bold guifg=ForestGreen
-  hi Typedef cterm=bold ctermfg=DarkGreen gui=bold guifg=ForestGreen
+  hi PreCondit ctermfg=Magenta guifg=MediumPurple
+hi Type cterm=bold ctermfg=Green gui=none guifg=MediumSeaGreen
+  hi Structure cterm=bold ctermfg=DarkGreen guifg=MediumSeaGreen
+  hi StorageClass cterm=bold ctermfg=DarkGreen guifg=MediumSeaGreen
+  hi Typedef cterm=bold ctermfg=DarkGreen guifg=MediumSeaGreen
 "hi Ignore ctermfg=7 guifg=bg
 hi Error term=reverse cterm=bold ctermfg=LightGray ctermbg=Red gui=bold guifg=White guibg=Red
 hi Todo term=standout cterm=bold ctermfg=LightBlue ctermbg=Black gui=bold guifg=Black guibg=Yellow
