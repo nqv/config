@@ -12,8 +12,6 @@ COUNT=0
 tmux new-window -n "$LOGFILE"
 
 for SERVER in $SERVERS; do
-	NAME="$SERVER:$LOGFILE"
-
 	CMD="ssh $SERVER tail -F $LOGFILE"
 
 	if [[ $COUNT -eq 0 ]]; then
@@ -23,3 +21,5 @@ for SERVER in $SERVERS; do
 	fi
 	COUNT=$((COUNT + 1))
 done
+
+tmux set-window-option -t "$LOGFILE" synchronize-panes on
