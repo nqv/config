@@ -31,3 +31,10 @@ URxvt.keysym.C-slash: perl:keyboard-select:search
 ! Change font size on Control-Plus/Minus
 URxvt.keysym.C-minus: perl:font-size:increase
 URxvt.keysym.C-equal: perl:font-size:decrease
+
+Xft.antialias: true
+Xft.autohint: false
+Xft.hinting: true
+Xft.hintstyle: hintmedium
+Xft.lcdfilter: lcddefault
+Xft.rgba: rgb
