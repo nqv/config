@@ -1,16 +1,26 @@
 #!/bin/bash
-export GOPATH=$(dirname -- "$(readlink -f -- "$BASH_SOURCE[0]")")
+GOPATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 if [ -z "$1" ]; then
-	export GOROOT="$HOME/tools/go"
+	GOROOT="$GOPATH/current"
 else
-	export GOROOT="$1"
+	GOROOT="$1"
 fi
+if [ ! -d "$GOROOT" ]; then
+	echo "GOROOT not found: $GOROOT"
+	return
+fi
+
 for P in "$GOPATH" "$GOROOT"; do
 	GOBIN="$P/bin"
 	if [[ ":$PATH:" != *":$GOBIN:"* ]]; then
-		export PATH="$GOBIN:$PATH"
+		PATH="$GOBIN:$PATH"
 	fi
 done
+
+export GOPATH="$GOPATH"
+export GOROOT="$GOROOT"
+export PATH="$PATH"
+
 echo "GOROOT:" "$GOROOT"
 echo "GOPATH:" "$GOPATH"
 echo "PATH:  " "$PATH"
