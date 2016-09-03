@@ -8,9 +8,9 @@ endif
 let colors_name = "afelion"
 
 set background=dark
-hi Normal ctermfg=LightGray ctermbg=Black cterm=NONE guifg=LightGray guibg=Black gui=NONE
+hi Normal ctermfg=Gray ctermbg=Black cterm=NONE guifg=Gray guibg=Black gui=NONE
 hi LineNr ctermfg=Blue ctermbg=DarkGray cterm=NONE guifg=Blue guibg=DarkGray gui=NONE
-hi Pmenu ctermfg=Black ctermbg=LightGray cterm=NONE guifg=Black guibg=LightGray gui=NONE
+hi Pmenu ctermfg=Black ctermbg=Gray cterm=NONE guifg=Black guibg=Gray gui=NONE
 hi PmenuSel ctermfg=Black ctermbg=Yellow cterm=NONE guifg=Black guibg=Yellow gui=NONE
 
 hi WarningMsg ctermfg=Black ctermbg=Yellow cterm=NONE guifg=Black guibg=Yellow gui=NONE
@@ -21,14 +21,14 @@ hi NonText ctermfg=Blue cterm=bold guifg=Blue gui=bold
 hi Directory ctermfg=White cterm=bold guifg=White gui=bold
 hi MoreMsg ctermfg=NONE cterm=reverse guifg=NONE gui=reverse
 hi Question ctermfg=NONE cterm=reverse guifg=NONE gui=reverse
-hi Visual ctermfg=Black ctermbg=LightGray cterm=NONE guifg=Black guibg=LightGray gui=NONE
+hi Visual ctermfg=Black ctermbg=Gray cterm=NONE guifg=Black guibg=Gray gui=NONE
 hi Search ctermfg=Black ctermbg=Yellow cterm=NONE guifg=Black guibg=Yellow gui=NONE
 hi Title ctermfg=Magenta cterm=bold guifg=Magenta gui=bold
 hi Underlined ctermfg=NONE ctermbg=NONE cterm=underline guifg=NONE guibg=NONE gui=underline
 hi CursorColumn ctermfg=NONE ctermbg=NONE cterm=reverse guifg=NONE guibg=NONE gui=reverse
 hi CursorLine ctermfg=NONE ctermbg=NONE cterm=underline guifg=NONE guibg=NONE gui=underline
 
-hi DiffText ctermfg=Black ctermbg=LightGray cterm=NONE guifg=Black guibg=LightGray gui=NONE
+hi DiffText ctermfg=Black ctermbg=Gray cterm=NONE guifg=Black guibg=Gray gui=NONE
 hi DiffAdd ctermfg=Black ctermbg=Green cterm=NONE guifg=Black guibg=Green gui=NONE
 hi DiffDelete ctermfg=Black ctermbg=Red cterm=NONE guifg=Black guibg=Red gui=NONE
 hi DiffChange ctermfg=Black ctermbg=Yellow cterm=NONE guifg=Black guibg=Yellow gui=NONE
@@ -43,3 +43,8 @@ hi Special ctermfg=Yellow cterm=NONE guifg=Yellow gui=NONE
 
 hi Error ctermfg=White ctermbg=Red cterm=NONE guifg=White guibg=Red gui=NONE
 hi Todo ctermfg=Black ctermbg=Yellow cterm=NONE guifg=Black guibg=Yellow gui=NONE
+
+hi SpellBad ctermfg=Red ctermbg=Gray cterm=NONE guifg=NONE guibg=NONE gui=undercurl guisp=Red
+hi SpellCap ctermfg=Blue ctermbg=Gray cterm=NONE guifg=NONE guibg=NONE gui=undercurl guisp=Blue
+hi SpellLocal ctermfg=Magenta ctermbg=Gray cterm=NONE guifg=NONE guibg=NONE gui=undercurl guisp=Magenta
+hi SpellRare ctermfg=Cyan ctermbg=Gray cterm=NONE guifg=NONE guibg=NONE gui=undercurl guisp=Cyan
