@@ -1,4 +1,5 @@
 #!/bin/sh
+set -e
 
 # Required an argument
 if [ $# -lt 1 ]; then
@@ -22,9 +23,9 @@ fi
 if [ -z "$TRG" ]; then
   # Create mount point in /media
   NAME=`basename "$SRC"`
-  TRG="/media/$NAME"
+  TRG="/mnt/$NAME"
   if [ ! -d "$TRG" ]; then
-    $SUDO mkdir "$TRG"
+    $SUDO mkdir -p "$TRG"
   fi
 fi
 
