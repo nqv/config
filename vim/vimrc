@@ -13,5 +13,7 @@ set wildmenu
 set wildmode=list:longest,full
 
 if has('gui_running')
+  set number relativenumber
+  set guioptions-=T
   set guifont=Monospace\ 9
 endif

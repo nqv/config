@@ -1,0 +1,20 @@
+autoload -Uz compinit vcs_info
+compinit
+
+# Key binding
+#bindkey "^[[1~"   beginning-of-line
+#bindkey "^[[4~"   end-of-line
+#bindkey "^[[3~"   delete-char
+#bindkey "^[[A"    up-line-or-history
+#bindkey "^[[B"    down-line-or-history
+#bindkey "^[[1;5D" backward-word
+#bindkey "^[[1;5C" forward-word
+
+zstyle ':vcs_info:*' enable git
+zstyle ':vcs_info:git:*' formats '[%b]'
+
+precmd() { vcs_info }
+
+setopt PROMPT_SUBST
+PROMPT='%F{green}%m%f %F{cyan}%~%f%# '
+RPROMPT='%F{red}${vcs_info_msg_0_}%f'
